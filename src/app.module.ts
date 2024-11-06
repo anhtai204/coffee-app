@@ -10,15 +10,14 @@ import { TheLoaiEntity } from './theloai/theloai.entity';
 import { TheLoaiModule } from './theloai/theloai.module';
 import { ToppingModule } from './topping/topping.module';
 import { ToppingEntity } from './topping/topping.entity';
-import { KhuyenMaiEntity } from './khuyenmai/khuyenmai.entity';
-import { KhuyenMaiModule } from './khuyenmai/khuyenmai.module';
 import { ProductEntity } from './product/product.entity';
 import { ProductModule } from './product/product.module';
 import { ProductToppingEntity } from './product_topping/product_topping.entity';
-import { PhuongThucThanhToanModule, ProductToppingModule } from './product_topping/product_topping.module';
 import { RateEntity } from './rate/rate.entity';
 import { RateModule } from './rate/rate.module';
-import { PhuongThucThanhToanEntity } from './phuongthucthanhtoan/phuongthucthanhtoan.entity';
+import { ProductToppingModule } from './product_topping/product_topping.module';
+import { KhuyenMaiModule } from './khuyenmai/khuyenmai.module';
+import { KhuyenMaiEntity } from './khuyenmai/khuyenmai.entity';
 
 @Module({
   imports: [

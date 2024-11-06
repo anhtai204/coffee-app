@@ -242,14 +242,14 @@ const theloai_entity_1 = __webpack_require__(17);
 const theloai_module_1 = __webpack_require__(24);
 const topping_module_1 = __webpack_require__(27);
 const topping_entity_1 = __webpack_require__(16);
-const khuyenmai_entity_1 = __webpack_require__(13);
-const khuyenmai_module_1 = __webpack_require__(30);
 const product_entity_1 = __webpack_require__(12);
-const product_module_1 = __webpack_require__(33);
+const product_module_1 = __webpack_require__(30);
 const product_topping_entity_1 = __webpack_require__(15);
-const product_topping_module_1 = __webpack_require__(39);
 const rate_entity_1 = __webpack_require__(11);
-const rate_module_1 = __webpack_require__(36);
+const rate_module_1 = __webpack_require__(33);
+const product_topping_module_1 = __webpack_require__(36);
+const khuyenmai_module_1 = __webpack_require__(39);
+const khuyenmai_entity_1 = __webpack_require__(13);
 let AppModule = class AppModule {
     constructor(dataSource) {
         this.dataSource = dataSource;
@@ -1301,116 +1301,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.KhuyenMaiModule = void 0;
-const common_1 = __webpack_require__(6);
-const typeorm_1 = __webpack_require__(9);
-const rate_module_1 = __webpack_require__(36);
-const khuyenmai_entity_1 = __webpack_require__(13);
-const khuyenmai_controller_1 = __webpack_require__(31);
-const khuyenmai_service_1 = __webpack_require__(32);
-let KhuyenMaiModule = class KhuyenMaiModule {
-};
-exports.KhuyenMaiModule = KhuyenMaiModule;
-exports.KhuyenMaiModule = KhuyenMaiModule = __decorate([
-    (0, common_1.Module)({
-        imports: [
-            typeorm_1.TypeOrmModule.forFeature([khuyenmai_entity_1.KhuyenMaiEntity]),
-            rate_module_1.RateModule
-        ],
-        controllers: [khuyenmai_controller_1.KhuyenMaiController],
-        providers: [khuyenmai_service_1.KhuyenMaiService]
-    })
-], KhuyenMaiModule);
-
-
-/***/ }),
-/* 31 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.PhuongThucThanhToanController = void 0;
-const common_1 = __webpack_require__(6);
-let PhuongThucThanhToanController = class PhuongThucThanhToanController {
-    constructor(PhuongThucThanhToanService) {
-        this.PhuongThucThanhToanService = PhuongThucThanhToanService;
-    }
-};
-exports.PhuongThucThanhToanController = PhuongThucThanhToanController;
-exports.PhuongThucThanhToanController = PhuongThucThanhToanController = __decorate([
-    (0, common_1.Controller)('khuyenmai'),
-    __metadata("design:paramtypes", [PhuongThucThanhToanController])
-], PhuongThucThanhToanController);
-
-
-/***/ }),
-/* 32 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-var _a;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.KhuyenMaiService = void 0;
-const common_1 = __webpack_require__(6);
-const typeorm_1 = __webpack_require__(9);
-const typeorm_2 = __webpack_require__(14);
-let KhuyenMaiService = class KhuyenMaiService {
-    constructor(khuyenMaiRepository) {
-        this.khuyenMaiRepository = khuyenMaiRepository;
-    }
-};
-exports.KhuyenMaiService = KhuyenMaiService;
-exports.KhuyenMaiService = KhuyenMaiService = __decorate([
-    (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(KhuyenMaiEntity)),
-    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object])
-], KhuyenMaiService);
-
-
-/***/ }),
-/* 33 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProductModule = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(9);
 const product_entity_1 = __webpack_require__(12);
-const product_controller_1 = __webpack_require__(34);
-const product_service_1 = __webpack_require__(35);
+const product_controller_1 = __webpack_require__(31);
+const product_service_1 = __webpack_require__(32);
 const rate_entity_1 = __webpack_require__(11);
-const rate_module_1 = __webpack_require__(36);
+const rate_module_1 = __webpack_require__(33);
 let ProductModule = class ProductModule {
 };
 exports.ProductModule = ProductModule;
@@ -1427,7 +1325,7 @@ exports.ProductModule = ProductModule = __decorate([
 
 
 /***/ }),
-/* 34 */
+/* 31 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1450,7 +1348,7 @@ exports.ProductController = void 0;
 const common_1 = __webpack_require__(6);
 const globalClass_1 = __webpack_require__(21);
 const gobalEnum_1 = __webpack_require__(22);
-const product_service_1 = __webpack_require__(35);
+const product_service_1 = __webpack_require__(32);
 const product_entity_1 = __webpack_require__(12);
 let ProductController = class ProductController {
     constructor(productService) {
@@ -1681,7 +1579,7 @@ exports.ProductController = ProductController = __decorate([
 
 
 /***/ }),
-/* 35 */
+/* 32 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2247,7 +2145,7 @@ exports.ProductService = ProductService = __decorate([
 
 
 /***/ }),
-/* 36 */
+/* 33 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2263,8 +2161,8 @@ exports.RateModule = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(9);
 const rate_entity_1 = __webpack_require__(11);
-const rate_controller_1 = __webpack_require__(37);
-const rate_service_1 = __webpack_require__(38);
+const rate_controller_1 = __webpack_require__(34);
+const rate_service_1 = __webpack_require__(35);
 const product_entity_1 = __webpack_require__(12);
 const user_entity_1 = __webpack_require__(10);
 let RateModule = class RateModule {
@@ -2282,7 +2180,7 @@ exports.RateModule = RateModule = __decorate([
 
 
 /***/ }),
-/* 37 */
+/* 34 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2305,7 +2203,7 @@ exports.RateController = void 0;
 const common_1 = __webpack_require__(6);
 const globalClass_1 = __webpack_require__(21);
 const gobalEnum_1 = __webpack_require__(22);
-const rate_service_1 = __webpack_require__(38);
+const rate_service_1 = __webpack_require__(35);
 const rate_entity_1 = __webpack_require__(11);
 let RateController = class RateController {
     constructor(rateService) {
@@ -2353,7 +2251,7 @@ exports.RateController = RateController = __decorate([
 
 
 /***/ }),
-/* 38 */
+/* 35 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2416,7 +2314,7 @@ exports.RateService = RateService = __decorate([
 
 
 /***/ }),
-/* 39 */
+/* 36 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2432,8 +2330,8 @@ exports.ProductToppingModule = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(9);
 const product_topping_entity_1 = __webpack_require__(15);
-const product_topping_service_1 = __webpack_require__(40);
-const product_topping_controller_1 = __webpack_require__(41);
+const product_topping_service_1 = __webpack_require__(37);
+const product_topping_controller_1 = __webpack_require__(38);
 let ProductToppingModule = class ProductToppingModule {
 };
 exports.ProductToppingModule = ProductToppingModule;
@@ -2449,7 +2347,7 @@ exports.ProductToppingModule = ProductToppingModule = __decorate([
 
 
 /***/ }),
-/* 40 */
+/* 37 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2487,7 +2385,7 @@ exports.ProductToppingService = ProductToppingService = __decorate([
 
 
 /***/ }),
-/* 41 */
+/* 38 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2505,7 +2403,7 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProductToppingController = void 0;
 const common_1 = __webpack_require__(6);
-const product_topping_service_1 = __webpack_require__(40);
+const product_topping_service_1 = __webpack_require__(37);
 let ProductToppingController = class ProductToppingController {
     constructor(productToppingService) {
         this.productToppingService = productToppingService;
@@ -2516,6 +2414,155 @@ exports.ProductToppingController = ProductToppingController = __decorate([
     (0, common_1.Controller)('rate'),
     __metadata("design:paramtypes", [typeof (_a = typeof product_topping_service_1.ProductToppingService !== "undefined" && product_topping_service_1.ProductToppingService) === "function" ? _a : Object])
 ], ProductToppingController);
+
+
+/***/ }),
+/* 39 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.KhuyenMaiModule = void 0;
+const common_1 = __webpack_require__(6);
+const typeorm_1 = __webpack_require__(9);
+const khuyenmai_entity_1 = __webpack_require__(13);
+const khuyenmai_service_1 = __webpack_require__(40);
+const khuyenmai_controller_1 = __webpack_require__(41);
+let KhuyenMaiModule = class KhuyenMaiModule {
+};
+exports.KhuyenMaiModule = KhuyenMaiModule;
+exports.KhuyenMaiModule = KhuyenMaiModule = __decorate([
+    (0, common_1.Module)({
+        imports: [
+            typeorm_1.TypeOrmModule.forFeature([khuyenmai_entity_1.KhuyenMaiEntity])
+        ],
+        controllers: [khuyenmai_controller_1.KhuyenMaiController],
+        providers: [khuyenmai_service_1.KhuyenMaiService]
+    })
+], KhuyenMaiModule);
+
+
+/***/ }),
+/* 40 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.KhuyenMaiService = void 0;
+const common_1 = __webpack_require__(6);
+const typeorm_1 = __webpack_require__(9);
+const typeorm_2 = __webpack_require__(14);
+const khuyenmai_entity_1 = __webpack_require__(13);
+let KhuyenMaiService = class KhuyenMaiService {
+    constructor(khuyenMaiRepository) {
+        this.khuyenMaiRepository = khuyenMaiRepository;
+    }
+    async getKhuyenMai() {
+        const khuyenmai = await this.khuyenMaiRepository.find();
+        return khuyenmai;
+    }
+    async save(khuyenMai) {
+        const saveKhuyenMai = await this.khuyenMaiRepository.save(khuyenMai);
+        return saveKhuyenMai;
+    }
+};
+exports.KhuyenMaiService = KhuyenMaiService;
+exports.KhuyenMaiService = KhuyenMaiService = __decorate([
+    (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_1.InjectRepository)(khuyenmai_entity_1.KhuyenMaiEntity)),
+    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object])
+], KhuyenMaiService);
+
+
+/***/ }),
+/* 41 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a, _b, _c, _d;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.KhuyenMaiController = void 0;
+const common_1 = __webpack_require__(6);
+const globalClass_1 = __webpack_require__(21);
+const gobalEnum_1 = __webpack_require__(22);
+const khuyenmai_service_1 = __webpack_require__(40);
+const khuyenmai_entity_1 = __webpack_require__(13);
+let KhuyenMaiController = class KhuyenMaiController {
+    constructor(KhuyenMaiService) {
+        this.KhuyenMaiService = KhuyenMaiService;
+    }
+    async createKhuyenMai(khuyenMai) {
+        try {
+            console.log(khuyenMai);
+            const saveKhuyenMai = await this.KhuyenMaiService.save(khuyenMai);
+            return new globalClass_1.ResponseData(saveKhuyenMai, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            return new globalClass_1.ResponseData(null, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+    async getAllKhuyenMai() {
+        try {
+            const khuyenMais = await this.KhuyenMaiService.getKhuyenMai();
+            return new globalClass_1.ResponseData(khuyenMais, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            return new globalClass_1.ResponseData([], gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+};
+exports.KhuyenMaiController = KhuyenMaiController;
+__decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_b = typeof khuyenmai_entity_1.KhuyenMaiEntity !== "undefined" && khuyenmai_entity_1.KhuyenMaiEntity) === "function" ? _b : Object]),
+    __metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
+], KhuyenMaiController.prototype, "createKhuyenMai", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
+], KhuyenMaiController.prototype, "getAllKhuyenMai", null);
+exports.KhuyenMaiController = KhuyenMaiController = __decorate([
+    (0, common_1.Controller)('khuyenmai'),
+    __metadata("design:paramtypes", [typeof (_a = typeof khuyenmai_service_1.KhuyenMaiService !== "undefined" && khuyenmai_service_1.KhuyenMaiService) === "function" ? _a : Object])
+], KhuyenMaiController);
 
 
 /***/ })
@@ -2580,7 +2627,7 @@ exports.ProductToppingController = ProductToppingController = __decorate([
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("8df515b6bac5bc6c4aee")
+/******/ 		__webpack_require__.h = () => ("1f3ef90ce67c59c13481")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
