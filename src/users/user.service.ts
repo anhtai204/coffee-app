@@ -35,6 +35,32 @@ export class UserService {
             return false;
         }
     }
+
+    async changePassWord(id_user: number, new_password: string): Promise<boolean> {
+        try {
+            const user = await this.userRepository.findOne({ where: { id_user: id_user } });
+            if (!user) {
+                return false; // Không tìm thấy user
+            }
+            user.password = new_password; // Cập nhật mật khẩu mới (cần mã hóa trước khi lưu)
+            await this.userRepository.save(user); // Lưu thay đổi
+            return true;
+        } catch (error) {
+            console.error('Error updating password:', error);
+            return false;
+        }
+    }
+    
+
+    // async getUserFromEmail(email_in: string): Promise<UserEntity>{
+    //     try {
+    //         const user = await this.userRepository.findOne({ where: { email: email_in } });
+    //         return user;
+    //     } catch (error){
+    //         console.error('Error checking email:', error);
+    //         return null;
+    //     }
+    // }
     
 
     

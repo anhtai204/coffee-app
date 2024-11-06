@@ -36,7 +36,5 @@ export class ProductEntity extends BaseEntity {
 
     @OneToMany(() => RateEntity, rate => rate.product)
     rates: RateEntity[];
-    
-    
 }
 

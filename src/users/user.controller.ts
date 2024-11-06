@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, Res } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put, Query, Res } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { UserEntity } from "./user.entity";
 import { ResponseData } from "src/global/globalClass";
@@ -34,7 +34,7 @@ export class UserController{
     async updatePassword(@Param('email') email: string, @Param('password') password: string): Promise<ResponseData<Boolean>> {
         const check = await this.userService.updatePassword(email, password);
         try {
-            return new ResponseData<Boolean>(check, HttpStatus.ERROR, HttpMessage.ERROR);
+            return new ResponseData<Boolean>(check, HttpStatus.SUCCESS, HttpMessage.SUCCESS);
         } catch (error){
             return new ResponseData<Boolean>(check, HttpStatus.ERROR, HttpMessage.ERROR);
         }
@@ -47,5 +47,25 @@ export class UserController{
         console.log(`Checking email: ${email}`); // Log email
         return this.userService.checkEmailExists(email);
     }
+
+    // get user from email
+    // @Get('/get-user-from-email')
+    // async getUserFromEmail(@Query('email') email: string): Promise<UserEntity>{
+    //     return this.userService.getUserFromEmail(email);
+    // }
+
+
+    // change password
+    @Put('/change-password/:id_user')
+    async changePasswordFromId(@Param('id_user') id_user: number, @Body('new_password') new_password: string): Promise<ResponseData<Boolean>> {
+        try {
+            const check = await this.userService.changePassWord(id_user, new_password);
+            return new ResponseData<Boolean>(check, HttpStatus.SUCCESS, HttpMessage.SUCCESS);
+        } catch (error) {
+            console.error('Error updating password:', error);
+            return new ResponseData<Boolean>(false, HttpStatus.ERROR, HttpMessage.ERROR);
+        }
+    }
+
 
 }

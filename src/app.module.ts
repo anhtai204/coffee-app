@@ -15,9 +15,10 @@ import { KhuyenMaiModule } from './khuyenmai/khuyenmai.module';
 import { ProductEntity } from './product/product.entity';
 import { ProductModule } from './product/product.module';
 import { ProductToppingEntity } from './product_topping/product_topping.entity';
-import { ProductToppingModule } from './product_topping/product_topping.module';
+import { PhuongThucThanhToanModule, ProductToppingModule } from './product_topping/product_topping.module';
 import { RateEntity } from './rate/rate.entity';
 import { RateModule } from './rate/rate.module';
+import { PhuongThucThanhToanEntity } from './phuongthucthanhtoan/phuongthucthanhtoan.entity';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { RateModule } from './rate/rate.module';
         host: '0.0.0.0',
         port: 3306,
         username: 'root',
-        password: '',
+        password: '22042004',
         database: 'coffee_app',
         entities: [UserEntity, TheLoaiEntity, ToppingEntity, KhuyenMaiEntity, ProductEntity, ProductToppingEntity, RateEntity],
         synchronize: false,
@@ -39,7 +40,7 @@ import { RateModule } from './rate/rate.module';
       KhuyenMaiModule,
       ProductModule,
       ProductToppingModule,
-      RateModule
+      RateModule,
   ],
   controllers: [AppController],
   providers: [AppService],

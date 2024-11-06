@@ -37,6 +37,7 @@ export class ProductController{
     async getAllCoffee(): Promise<ResponseData<ProductEntity[]>> {
         try {
             const products = await this.productService.getProductCoffee();
+            console.log(products);
             return new ResponseData<ProductEntity[]>(products, HttpStatus.SUCCESS, HttpMessage.SUCCESS);
         } catch (error) {
             return new ResponseData<ProductEntity[]>([], HttpStatus.ERROR, HttpMessage.ERROR);
@@ -52,6 +53,7 @@ export class ProductController{
             return new ResponseData<ProductEntity[]>([], HttpStatus.ERROR, HttpMessage.ERROR);
         }
     }
+    
 
     @Get("/caphe/sortSale")
     async getCoffeeSortSale(): Promise<ResponseData<ProductEntity[]>> {
@@ -66,8 +68,11 @@ export class ProductController{
 
     @Get("/caphe/sortRate")
     async getCoffeeSortRate(): Promise<ResponseData<ProductEntity[]>> {
+        console.log("123");
         try {
             const products = await this.productService.getCoffeeFilterRate();
+            console.log(products);
+            console.log("234");
             return new ResponseData<ProductEntity[]>(products, HttpStatus.SUCCESS, HttpMessage.SUCCESS);
         } catch (error) {
             return new ResponseData<ProductEntity[]>([], HttpStatus.ERROR, HttpMessage.ERROR);

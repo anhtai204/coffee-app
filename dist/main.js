@@ -247,9 +247,9 @@ const khuyenmai_module_1 = __webpack_require__(30);
 const product_entity_1 = __webpack_require__(12);
 const product_module_1 = __webpack_require__(33);
 const product_topping_entity_1 = __webpack_require__(15);
-const product_topping_module_1 = __webpack_require__(36);
+const product_topping_module_1 = __webpack_require__(39);
 const rate_entity_1 = __webpack_require__(11);
-const rate_module_1 = __webpack_require__(39);
+const rate_module_1 = __webpack_require__(36);
 let AppModule = class AppModule {
     constructor(dataSource) {
         this.dataSource = dataSource;
@@ -264,7 +264,7 @@ exports.AppModule = AppModule = __decorate([
                 host: '0.0.0.0',
                 port: 3306,
                 username: 'root',
-                password: '',
+                password: '22042004',
                 database: 'coffee_app',
                 entities: [user_entity_1.UserEntity, theloai_entity_1.TheLoaiEntity, topping_entity_1.ToppingEntity, khuyenmai_entity_1.KhuyenMaiEntity, product_entity_1.ProductEntity, product_topping_entity_1.ProductToppingEntity, rate_entity_1.RateEntity],
                 synchronize: false,
@@ -276,7 +276,7 @@ exports.AppModule = AppModule = __decorate([
             khuyenmai_module_1.KhuyenMaiModule,
             product_module_1.ProductModule,
             product_topping_module_1.ProductToppingModule,
-            rate_module_1.RateModule
+            rate_module_1.RateModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
@@ -450,12 +450,20 @@ __decorate([
     __metadata("design:type", String)
 ], RateEntity.prototype, "comment", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => user_entity_1.UserEntity, user => user.rates, { eager: true }),
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], RateEntity.prototype, "id_user", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], RateEntity.prototype, "id_product", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.UserEntity, user => user.rates),
     (0, typeorm_1.JoinColumn)({ name: 'id_user' }),
     __metadata("design:type", typeof (_a = typeof user_entity_1.UserEntity !== "undefined" && user_entity_1.UserEntity) === "function" ? _a : Object)
 ], RateEntity.prototype, "user", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => product_entity_1.ProductEntity, product => product.rates, { eager: true }),
+    (0, typeorm_1.ManyToOne)(() => product_entity_1.ProductEntity, product => product.rates),
     (0, typeorm_1.JoinColumn)({ name: 'id_product' }),
     __metadata("design:type", typeof (_b = typeof product_entity_1.ProductEntity !== "undefined" && product_entity_1.ProductEntity) === "function" ? _b : Object)
 ], RateEntity.prototype, "product", void 0);
@@ -758,7 +766,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b, _c, _d, _e, _f;
+var _a, _b, _c, _d, _e, _f, _g;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserController = void 0;
 const common_1 = __webpack_require__(6);
@@ -792,7 +800,7 @@ let UserController = class UserController {
     async updatePassword(email, password) {
         const check = await this.userService.updatePassword(email, password);
         try {
-            return new globalClass_1.ResponseData(check, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+            return new globalClass_1.ResponseData(check, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
         }
         catch (error) {
             return new globalClass_1.ResponseData(check, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
@@ -801,6 +809,16 @@ let UserController = class UserController {
     async checkEmailExists(email) {
         console.log(`Checking email: ${email}`);
         return this.userService.checkEmailExists(email);
+    }
+    async changePasswordFromId(id_user, new_password) {
+        try {
+            const check = await this.userService.changePassWord(id_user, new_password);
+            return new globalClass_1.ResponseData(check, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            console.error('Error updating password:', error);
+            return new globalClass_1.ResponseData(false, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
     }
 };
 exports.UserController = UserController;
@@ -832,6 +850,14 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", typeof (_f = typeof Promise !== "undefined" && Promise) === "function" ? _f : Object)
 ], UserController.prototype, "checkEmailExists", null);
+__decorate([
+    (0, common_1.Put)('/change-password/:id_user'),
+    __param(0, (0, common_1.Param)('id_user')),
+    __param(1, (0, common_1.Body)('new_password')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, String]),
+    __metadata("design:returntype", typeof (_g = typeof Promise !== "undefined" && Promise) === "function" ? _g : Object)
+], UserController.prototype, "changePasswordFromId", null);
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [typeof (_a = typeof user_service_1.UserService !== "undefined" && user_service_1.UserService) === "function" ? _a : Object])
@@ -887,6 +913,21 @@ let UserService = class UserService {
         }
         catch (error) {
             console.error('Error checking email:', error);
+            return false;
+        }
+    }
+    async changePassWord(id_user, new_password) {
+        try {
+            const user = await this.userRepository.findOne({ where: { id_user: id_user } });
+            if (!user) {
+                return false;
+            }
+            user.password = new_password;
+            await this.userRepository.save(user);
+            return true;
+        }
+        catch (error) {
+            console.error('Error updating password:', error);
             return false;
         }
     }
@@ -1263,6 +1304,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.KhuyenMaiModule = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(9);
+const rate_module_1 = __webpack_require__(36);
 const khuyenmai_entity_1 = __webpack_require__(13);
 const khuyenmai_controller_1 = __webpack_require__(31);
 const khuyenmai_service_1 = __webpack_require__(32);
@@ -1272,7 +1314,8 @@ exports.KhuyenMaiModule = KhuyenMaiModule;
 exports.KhuyenMaiModule = KhuyenMaiModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forFeature([khuyenmai_entity_1.KhuyenMaiEntity])
+            typeorm_1.TypeOrmModule.forFeature([khuyenmai_entity_1.KhuyenMaiEntity]),
+            rate_module_1.RateModule
         ],
         controllers: [khuyenmai_controller_1.KhuyenMaiController],
         providers: [khuyenmai_service_1.KhuyenMaiService]
@@ -1295,59 +1338,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.KhuyenMaiController = void 0;
+exports.PhuongThucThanhToanController = void 0;
 const common_1 = __webpack_require__(6);
-const khuyenmai_service_1 = __webpack_require__(32);
-const khuyenmai_entity_1 = __webpack_require__(13);
-const globalClass_1 = __webpack_require__(21);
-const gobalEnum_1 = __webpack_require__(22);
-let KhuyenMaiController = class KhuyenMaiController {
-    constructor(KhuyenMaiService) {
-        this.KhuyenMaiService = KhuyenMaiService;
-    }
-    async createKhuyenMai(khuyenMai) {
-        try {
-            console.log(khuyenMai);
-            const saveKhuyenMai = await this.KhuyenMaiService.save(khuyenMai);
-            return new globalClass_1.ResponseData(saveKhuyenMai, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
-        }
-        catch (error) {
-            return new globalClass_1.ResponseData(null, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
-        }
-    }
-    async getAllKhuyenMai() {
-        try {
-            const khuyenMais = await this.KhuyenMaiService.getKhuyenMai();
-            return new globalClass_1.ResponseData(khuyenMais, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
-        }
-        catch (error) {
-            return new globalClass_1.ResponseData([], gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
-        }
+let PhuongThucThanhToanController = class PhuongThucThanhToanController {
+    constructor(PhuongThucThanhToanService) {
+        this.PhuongThucThanhToanService = PhuongThucThanhToanService;
     }
 };
-exports.KhuyenMaiController = KhuyenMaiController;
-__decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [typeof (_b = typeof khuyenmai_entity_1.KhuyenMaiEntity !== "undefined" && khuyenmai_entity_1.KhuyenMaiEntity) === "function" ? _b : Object]),
-    __metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
-], KhuyenMaiController.prototype, "createKhuyenMai", null);
-__decorate([
-    (0, common_1.Get)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
-], KhuyenMaiController.prototype, "getAllKhuyenMai", null);
-exports.KhuyenMaiController = KhuyenMaiController = __decorate([
+exports.PhuongThucThanhToanController = PhuongThucThanhToanController;
+exports.PhuongThucThanhToanController = PhuongThucThanhToanController = __decorate([
     (0, common_1.Controller)('khuyenmai'),
-    __metadata("design:paramtypes", [typeof (_a = typeof khuyenmai_service_1.KhuyenMaiService !== "undefined" && khuyenmai_service_1.KhuyenMaiService) === "function" ? _a : Object])
-], KhuyenMaiController);
+    __metadata("design:paramtypes", [PhuongThucThanhToanController])
+], PhuongThucThanhToanController);
 
 
 /***/ }),
@@ -1374,25 +1377,15 @@ exports.KhuyenMaiService = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(9);
 const typeorm_2 = __webpack_require__(14);
-const khuyenmai_entity_1 = __webpack_require__(13);
 let KhuyenMaiService = class KhuyenMaiService {
     constructor(khuyenMaiRepository) {
         this.khuyenMaiRepository = khuyenMaiRepository;
-    }
-    async save(khuyenMai) {
-        const saveKhuyenMai = await this.khuyenMaiRepository.save(khuyenMai);
-        console.log(saveKhuyenMai);
-        return saveKhuyenMai;
-    }
-    async getKhuyenMai() {
-        const khuyenMai = await this.khuyenMaiRepository.find();
-        return khuyenMai;
     }
 };
 exports.KhuyenMaiService = KhuyenMaiService;
 exports.KhuyenMaiService = KhuyenMaiService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(khuyenmai_entity_1.KhuyenMaiEntity)),
+    __param(0, (0, typeorm_1.InjectRepository)(KhuyenMaiEntity)),
     __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object])
 ], KhuyenMaiService);
 
@@ -1416,13 +1409,16 @@ const typeorm_1 = __webpack_require__(9);
 const product_entity_1 = __webpack_require__(12);
 const product_controller_1 = __webpack_require__(34);
 const product_service_1 = __webpack_require__(35);
+const rate_entity_1 = __webpack_require__(11);
+const rate_module_1 = __webpack_require__(36);
 let ProductModule = class ProductModule {
 };
 exports.ProductModule = ProductModule;
 exports.ProductModule = ProductModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forFeature([product_entity_1.ProductEntity])
+            typeorm_1.TypeOrmModule.forFeature([product_entity_1.ProductEntity, rate_entity_1.RateEntity]),
+            rate_module_1.RateModule
         ],
         controllers: [product_controller_1.ProductController],
         providers: [product_service_1.ProductService]
@@ -1482,6 +1478,7 @@ let ProductController = class ProductController {
     async getAllCoffee() {
         try {
             const products = await this.productService.getProductCoffee();
+            console.log(products);
             return new globalClass_1.ResponseData(products, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
         }
         catch (error) {
@@ -1507,8 +1504,11 @@ let ProductController = class ProductController {
         }
     }
     async getCoffeeSortRate() {
+        console.log("123");
         try {
             const products = await this.productService.getCoffeeFilterRate();
+            console.log(products);
+            console.log("234");
             return new globalClass_1.ResponseData(products, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
         }
         catch (error) {
@@ -1698,16 +1698,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a;
+var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProductService = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(9);
 const typeorm_2 = __webpack_require__(14);
 const product_entity_1 = __webpack_require__(12);
+const rate_entity_1 = __webpack_require__(11);
 let ProductService = class ProductService {
-    constructor(productRepository) {
+    constructor(productRepository, rateRepository) {
         this.productRepository = productRepository;
+        this.rateRepository = rateRepository;
     }
     async save(khuyenMai) {
         const saveProduct = await this.productRepository.save(khuyenMai);
@@ -1719,174 +1721,528 @@ let ProductService = class ProductService {
         return products;
     }
     async getProductCoffee() {
-        const products = await this.productRepository.find({
-            relations: ["theLoai"],
-            where: {
-                theLoai: {
-                    ten_the_loai: "CaPhe"
-                }
-            }
-        });
-        return products;
+        const products = await this.productRepository
+            .createQueryBuilder('product')
+            .leftJoinAndSelect('product.theLoai', 'theLoai')
+            .leftJoinAndSelect('product.khuyenMai', 'khuyenMai')
+            .leftJoin('product.rates', 'rate')
+            .select([
+            'product.id_product AS id_product',
+            'product.tenSanPham AS tenSanPham',
+            'product.giaSanPham AS giaSanPham',
+            'product.khuyenmai_gia AS khuyenmai_gia',
+            'theLoai.id_theLoai AS theLoai_id_theLoai',
+            'theLoai.ten_the_loai AS theLoai_ten_the_loai',
+            'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
+            'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
+            'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
+            'COALESCE(AVG(rate.soLuongSao), 0) AS average_star'
+        ])
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'CaPhe' })
+            .groupBy('product.id_product')
+            .addGroupBy('theLoai.id_theLoai')
+            .addGroupBy('theLoai.ten_the_loai')
+            .addGroupBy('khuyenMai.id_khuyen_mai')
+            .addGroupBy('khuyenMai.phanTramKhuyenMai')
+            .addGroupBy('khuyenMai.donHangToiThieu')
+            .getRawMany();
+        const productsWithAverageStar = products.map(product => ({
+            id_product: product.id_product,
+            tenSanPham: product.tenSanPham,
+            giaSanPham: product.giaSanPham,
+            khuyenmai_gia: product.khuyenmai_gia,
+            theLoai: {
+                id_theLoai: product.theLoai_id_theLoai,
+                ten_the_loai: product.theLoai_ten_the_loai,
+            },
+            khuyenMai: {
+                id_khuyen_mai: product.khuyenMai_id_khuyen_mai,
+                phanTramKhuyenMai: product.khuyenMai_phanTramKhuyenMai,
+                donHangToiThieu: product.khuyenMai_donHangToiThieu,
+            },
+            average_star: parseFloat(product.average_star)
+        }));
+        return productsWithAverageStar;
     }
     async getCoffeeFilterGia() {
-        const products = await this.productRepository.find({
-            relations: ["theLoai"],
-            where: {
-                theLoai: {
-                    ten_the_loai: "CaPhe"
-                }
+        const products = await this.productRepository
+            .createQueryBuilder('p')
+            .leftJoinAndSelect('p.theLoai', 'theLoai')
+            .leftJoinAndSelect('p.khuyenMai', 'khuyenMai')
+            .leftJoin('p.rates', 'rate')
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'CaPhe' })
+            .select([
+            'p.id_product AS id_product',
+            'p.tenSanPham AS tenSanPham',
+            'p.giaSanPham AS giaSanPham',
+            'p.khuyenmai_gia AS khuyenmai_gia',
+            'theLoai.id_theLoai AS theLoaiId',
+            'theLoai.ten_the_loai AS ten_the_loai',
+            'khuyenMai.id_khuyen_mai AS khuyenMaiId',
+            'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
+            'khuyenMai.donHangToiThieu AS donHangToiThieu',
+            'AVG(rate.soLuongSao) AS average_star'
+        ])
+            .groupBy('p.id_product')
+            .addGroupBy('theLoai.id_theLoai')
+            .addGroupBy('khuyenMai.id_khuyen_mai')
+            .orderBy('p.giaSanPham', 'ASC')
+            .getRawMany();
+        return products.map(product => ({
+            id_product: product.id_product,
+            tenSanPham: product.tenSanPham,
+            giaSanPham: product.giaSanPham,
+            khuyenmai_gia: product.khuyenmai_gia,
+            theLoai: {
+                id_theLoai: product.theLoaiId,
+                ten_the_loai: product.ten_the_loai
             },
-            order: {
-                giaSanPham: 'ASC'
-            }
-        });
-        return products;
+            khuyenMai: product.khuyenMaiId ? {
+                id_khuyen_mai: product.khuyenMaiId,
+                phanTramKhuyenMai: product.phanTramKhuyenMai,
+                donHangToiThieu: product.donHangToiThieu
+            } : null,
+            average_star: parseFloat(product.average_star) || 0
+        }));
     }
     async getCoffeeFilterKhuyenMai() {
-        const products = await this.productRepository.find({
-            relations: ["theLoai"],
-            where: {
-                theLoai: {
-                    ten_the_loai: "CaPhe"
-                }
+        const products = await this.productRepository
+            .createQueryBuilder('p')
+            .leftJoinAndSelect('p.theLoai', 'theLoai')
+            .leftJoinAndSelect('p.khuyenMai', 'khuyenMai')
+            .leftJoin('p.rates', 'rate')
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'CaPhe' })
+            .select([
+            'p.id_product AS id_product',
+            'p.tenSanPham AS tenSanPham',
+            'p.giaSanPham AS giaSanPham',
+            'p.khuyenmai_gia AS khuyenmai_gia',
+            'theLoai.id_theLoai AS theLoaiId',
+            'theLoai.ten_the_loai AS ten_the_loai',
+            'khuyenMai.id_khuyen_mai AS khuyenMaiId',
+            'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
+            'khuyenMai.donHangToiThieu AS donHangToiThieu',
+            'AVG(rate.soLuongSao) AS average_star'
+        ])
+            .groupBy('p.id_product')
+            .addGroupBy('theLoai.id_theLoai')
+            .addGroupBy('khuyenMai.id_khuyen_mai')
+            .orderBy('p.khuyenmai_gia', 'DESC')
+            .getRawMany();
+        return products.map(product => ({
+            id_product: product.id_product,
+            tenSanPham: product.tenSanPham,
+            giaSanPham: product.giaSanPham,
+            khuyenmai_gia: product.khuyenmai_gia,
+            theLoai: {
+                id_theLoai: product.theLoaiId,
+                ten_the_loai: product.ten_the_loai
             },
-            order: {
-                khuyenmai_gia: 'DESC'
-            }
-        });
-        return products;
+            khuyenMai: product.khuyenMaiId ? {
+                id_khuyen_mai: product.khuyenMaiId,
+                phanTramKhuyenMai: product.phanTramKhuyenMai,
+                donHangToiThieu: product.donHangToiThieu
+            } : null,
+            average_star: parseFloat(product.average_star) || 0
+        }));
     }
     async getCoffeeFilterRate() {
-        const products = await this.productRepository.createQueryBuilder('p')
-            .leftJoinAndSelect('p.rates', 'r')
-            .leftJoin('p.theLoai', 'tl')
-            .leftJoin('p.khuyenmai', 'km')
-            .where('tl.ten_the_loai = :tenTheLoai', { tenTheLoai: 'CaPhe' })
-            .select('p.id_product AS id_product')
-            .addSelect('p.tenSanPham AS tenSanPham')
-            .addSelect('p.giaSanPham AS giaSanPham')
-            .addSelect('p.khuyenmai_gia AS khuyenmai_gia')
-            .addSelect('p.khuyenmai_gia AS khuyenmai_gia')
-            .addSelect('AVG(r.soLuongSao) AS average_rating')
-            .addSelect('tl.ten_the_loai AS ten_the_loai')
-            .groupBy('p.id_product, p.tenSanPham, tl.ten_the_loai')
-            .orderBy('average_rating', 'DESC')
+        console.log("Fetching coffee products with average ratings...");
+        const products = await this.productRepository
+            .createQueryBuilder('product')
+            .leftJoinAndSelect('product.theLoai', 'theLoai')
+            .leftJoinAndSelect('product.khuyenMai', 'khuyenMai')
+            .leftJoin('product.rates', 'rate')
+            .select([
+            'product.id_product AS id_product',
+            'product.tenSanPham AS tenSanPham',
+            'product.giaSanPham AS giaSanPham',
+            'product.khuyenmai_gia AS khuyenmai_gia',
+            'theLoai.id_theLoai AS theLoai_id_theLoai',
+            'theLoai.ten_the_loai AS theLoai_ten_the_loai',
+            'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
+            'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
+            'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
+            'COALESCE(AVG(rate.soLuongSao), 0) AS average_star'
+        ])
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'CaPhe' })
+            .groupBy('product.id_product')
+            .addGroupBy('theLoai.id_theLoai')
+            .addGroupBy('theLoai.ten_the_loai')
+            .addGroupBy('khuyenMai.id_khuyen_mai')
+            .addGroupBy('khuyenMai.phanTramKhuyenMai')
+            .addGroupBy('khuyenMai.donHangToiThieu')
+            .orderBy('average_star', 'DESC')
             .getRawMany();
-        return products;
+        const formattedProducts = products.map(product => ({
+            id_product: product.id_product,
+            tenSanPham: product.tenSanPham,
+            giaSanPham: product.giaSanPham,
+            khuyenmai_gia: product.khuyenmai_gia,
+            theLoai: {
+                id_theLoai: product.theLoai_id_theLoai,
+                ten_the_loai: product.theLoai_ten_the_loai,
+            },
+            khuyenMai: {
+                id_khuyen_mai: product.khuyenMai_id_khuyen_mai,
+                phanTramKhuyenMai: product.khuyenMai_phanTramKhuyenMai,
+                donHangToiThieu: product.khuyenMai_donHangToiThieu,
+            },
+            average_star: parseFloat(product.average_star)
+        }));
+        return formattedProducts;
     }
     async getProductTraSua() {
-        const products = await this.productRepository.find({
-            relations: ["theLoai"],
-            where: {
-                theLoai: {
-                    ten_the_loai: "TraSua"
-                }
-            }
-        });
-        return products;
+        const products = await this.productRepository
+            .createQueryBuilder('product')
+            .leftJoinAndSelect('product.theLoai', 'theLoai')
+            .leftJoinAndSelect('product.khuyenMai', 'khuyenMai')
+            .leftJoin('product.rates', 'rate')
+            .select([
+            'product.id_product AS id_product',
+            'product.tenSanPham AS tenSanPham',
+            'product.giaSanPham AS giaSanPham',
+            'product.khuyenmai_gia AS khuyenmai_gia',
+            'theLoai.id_theLoai AS theLoai_id_theLoai',
+            'theLoai.ten_the_loai AS theLoai_ten_the_loai',
+            'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
+            'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
+            'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
+            'COALESCE(AVG(rate.soLuongSao), 0) AS average_star'
+        ])
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'TraSua' })
+            .groupBy('product.id_product')
+            .addGroupBy('theLoai.id_theLoai')
+            .addGroupBy('theLoai.ten_the_loai')
+            .addGroupBy('khuyenMai.id_khuyen_mai')
+            .addGroupBy('khuyenMai.phanTramKhuyenMai')
+            .addGroupBy('khuyenMai.donHangToiThieu')
+            .getRawMany();
+        const productsWithAverageStar = products.map(product => ({
+            id_product: product.id_product,
+            tenSanPham: product.tenSanPham,
+            giaSanPham: product.giaSanPham,
+            khuyenmai_gia: product.khuyenmai_gia,
+            theLoai: {
+                id_theLoai: product.theLoai_id_theLoai,
+                ten_the_loai: product.theLoai_ten_the_loai,
+            },
+            khuyenMai: {
+                id_khuyen_mai: product.khuyenMai_id_khuyen_mai,
+                phanTramKhuyenMai: product.khuyenMai_phanTramKhuyenMai,
+                donHangToiThieu: product.khuyenMai_donHangToiThieu,
+            },
+            average_star: parseFloat(product.average_star)
+        }));
+        return productsWithAverageStar;
     }
     async getTraSuaFilterGia() {
-        const products = await this.productRepository.find({
-            relations: ["theLoai"],
-            where: {
-                theLoai: {
-                    ten_the_loai: "TraSua"
-                }
+        const products = await this.productRepository
+            .createQueryBuilder('p')
+            .leftJoinAndSelect('p.theLoai', 'theLoai')
+            .leftJoinAndSelect('p.khuyenMai', 'khuyenMai')
+            .leftJoin('p.rates', 'rate')
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'TraSua' })
+            .select([
+            'p.id_product AS id_product',
+            'p.tenSanPham AS tenSanPham',
+            'p.giaSanPham AS giaSanPham',
+            'p.khuyenmai_gia AS khuyenmai_gia',
+            'theLoai.id_theLoai AS theLoaiId',
+            'theLoai.ten_the_loai AS ten_the_loai',
+            'khuyenMai.id_khuyen_mai AS khuyenMaiId',
+            'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
+            'khuyenMai.donHangToiThieu AS donHangToiThieu',
+            'AVG(rate.soLuongSao) AS average_star'
+        ])
+            .groupBy('p.id_product')
+            .addGroupBy('theLoai.id_theLoai')
+            .addGroupBy('khuyenMai.id_khuyen_mai')
+            .orderBy('p.giaSanPham', 'ASC')
+            .getRawMany();
+        return products.map(product => ({
+            id_product: product.id_product,
+            tenSanPham: product.tenSanPham,
+            giaSanPham: product.giaSanPham,
+            khuyenmai_gia: product.khuyenmai_gia,
+            theLoai: {
+                id_theLoai: product.theLoaiId,
+                ten_the_loai: product.ten_the_loai
             },
-            order: {
-                giaSanPham: 'ASC'
-            }
-        });
-        return products;
+            khuyenMai: product.khuyenMaiId ? {
+                id_khuyen_mai: product.khuyenMaiId,
+                phanTramKhuyenMai: product.phanTramKhuyenMai,
+                donHangToiThieu: product.donHangToiThieu
+            } : null,
+            average_star: parseFloat(product.average_star) || 0
+        }));
     }
     async getTraSuaFilterKhuyenMai() {
-        const products = await this.productRepository.find({
-            relations: ["theLoai"],
-            where: {
-                theLoai: {
-                    ten_the_loai: "TraSua"
-                }
+        const products = await this.productRepository
+            .createQueryBuilder('p')
+            .leftJoinAndSelect('p.theLoai', 'theLoai')
+            .leftJoinAndSelect('p.khuyenMai', 'khuyenMai')
+            .leftJoin('p.rates', 'rate')
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'TraSua' })
+            .select([
+            'p.id_product AS id_product',
+            'p.tenSanPham AS tenSanPham',
+            'p.giaSanPham AS giaSanPham',
+            'p.khuyenmai_gia AS khuyenmai_gia',
+            'theLoai.id_theLoai AS theLoaiId',
+            'theLoai.ten_the_loai AS ten_the_loai',
+            'khuyenMai.id_khuyen_mai AS khuyenMaiId',
+            'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
+            'khuyenMai.donHangToiThieu AS donHangToiThieu',
+            'AVG(rate.soLuongSao) AS average_star'
+        ])
+            .groupBy('p.id_product')
+            .addGroupBy('theLoai.id_theLoai')
+            .addGroupBy('khuyenMai.id_khuyen_mai')
+            .orderBy('p.khuyenmai_gia', 'DESC')
+            .getRawMany();
+        return products.map(product => ({
+            id_product: product.id_product,
+            tenSanPham: product.tenSanPham,
+            giaSanPham: product.giaSanPham,
+            khuyenmai_gia: product.khuyenmai_gia,
+            theLoai: {
+                id_theLoai: product.theLoaiId,
+                ten_the_loai: product.ten_the_loai
             },
-            order: {
-                khuyenmai_gia: 'DESC'
-            }
-        });
-        return products;
+            khuyenMai: product.khuyenMaiId ? {
+                id_khuyen_mai: product.khuyenMaiId,
+                phanTramKhuyenMai: product.phanTramKhuyenMai,
+                donHangToiThieu: product.donHangToiThieu
+            } : null,
+            average_star: parseFloat(product.average_star) || 0
+        }));
     }
     async getTraSuaFilterRate() {
-        const products = await this.productRepository.createQueryBuilder('p')
-            .leftJoinAndSelect('p.rates', 'r')
-            .innerJoin('p.theLoai', 'tl')
-            .where('tl.ten_the_loai = :tenTheLoai', { tenTheLoai: 'TraSua' })
-            .select('p.id_product AS p_id_product')
-            .addSelect('p.tenSanPham AS p_tenSanPham')
-            .addSelect('AVG(r.soLuongSao) AS average_rating')
-            .addSelect('tl.ten_the_loai AS p_ten_the_loai')
-            .groupBy('p.id_product, p.tenSanPham, tl.ten_the_loai')
-            .orderBy('average_rating', 'DESC')
+        console.log("Fetching coffee products with average ratings...");
+        const products = await this.productRepository
+            .createQueryBuilder('product')
+            .leftJoinAndSelect('product.theLoai', 'theLoai')
+            .leftJoinAndSelect('product.khuyenMai', 'khuyenMai')
+            .leftJoin('product.rates', 'rate')
+            .select([
+            'product.id_product AS id_product',
+            'product.tenSanPham AS tenSanPham',
+            'product.giaSanPham AS giaSanPham',
+            'product.khuyenmai_gia AS khuyenmai_gia',
+            'theLoai.id_theLoai AS theLoai_id_theLoai',
+            'theLoai.ten_the_loai AS theLoai_ten_the_loai',
+            'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
+            'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
+            'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
+            'COALESCE(AVG(rate.soLuongSao), 0) AS average_star'
+        ])
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'TraSua' })
+            .groupBy('product.id_product')
+            .addGroupBy('theLoai.id_theLoai')
+            .addGroupBy('theLoai.ten_the_loai')
+            .addGroupBy('khuyenMai.id_khuyen_mai')
+            .addGroupBy('khuyenMai.phanTramKhuyenMai')
+            .addGroupBy('khuyenMai.donHangToiThieu')
+            .orderBy('average_star', 'DESC')
             .getRawMany();
-        return products;
+        const formattedProducts = products.map(product => ({
+            id_product: product.id_product,
+            tenSanPham: product.tenSanPham,
+            giaSanPham: product.giaSanPham,
+            khuyenmai_gia: product.khuyenmai_gia,
+            theLoai: {
+                id_theLoai: product.theLoai_id_theLoai,
+                ten_the_loai: product.theLoai_ten_the_loai,
+            },
+            khuyenMai: {
+                id_khuyen_mai: product.khuyenMai_id_khuyen_mai,
+                phanTramKhuyenMai: product.khuyenMai_phanTramKhuyenMai,
+                donHangToiThieu: product.khuyenMai_donHangToiThieu,
+            },
+            average_star: parseFloat(product.average_star)
+        }));
+        return formattedProducts;
     }
     async getProductSinhTo() {
-        const products = await this.productRepository.find({
-            relations: ["theLoai"],
-            where: {
-                theLoai: {
-                    ten_the_loai: "SinhTo"
-                }
-            }
-        });
-        return products;
+        const products = await this.productRepository
+            .createQueryBuilder('product')
+            .leftJoinAndSelect('product.theLoai', 'theLoai')
+            .leftJoinAndSelect('product.khuyenMai', 'khuyenMai')
+            .leftJoin('product.rates', 'rate')
+            .select([
+            'product.id_product AS id_product',
+            'product.tenSanPham AS tenSanPham',
+            'product.giaSanPham AS giaSanPham',
+            'product.khuyenmai_gia AS khuyenmai_gia',
+            'theLoai.id_theLoai AS theLoai_id_theLoai',
+            'theLoai.ten_the_loai AS theLoai_ten_the_loai',
+            'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
+            'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
+            'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
+            'COALESCE(AVG(rate.soLuongSao), 0) AS average_star'
+        ])
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'SinhTo' })
+            .groupBy('product.id_product')
+            .addGroupBy('theLoai.id_theLoai')
+            .addGroupBy('theLoai.ten_the_loai')
+            .addGroupBy('khuyenMai.id_khuyen_mai')
+            .addGroupBy('khuyenMai.phanTramKhuyenMai')
+            .addGroupBy('khuyenMai.donHangToiThieu')
+            .getRawMany();
+        const productsWithAverageStar = products.map(product => ({
+            id_product: product.id_product,
+            tenSanPham: product.tenSanPham,
+            giaSanPham: product.giaSanPham,
+            khuyenmai_gia: product.khuyenmai_gia,
+            theLoai: {
+                id_theLoai: product.theLoai_id_theLoai,
+                ten_the_loai: product.theLoai_ten_the_loai,
+            },
+            khuyenMai: {
+                id_khuyen_mai: product.khuyenMai_id_khuyen_mai,
+                phanTramKhuyenMai: product.khuyenMai_phanTramKhuyenMai,
+                donHangToiThieu: product.khuyenMai_donHangToiThieu,
+            },
+            average_star: parseFloat(product.average_star)
+        }));
+        return productsWithAverageStar;
     }
     async getSinhToFilterGia() {
-        const products = await this.productRepository.find({
-            relations: ["theLoai"],
-            where: {
-                theLoai: {
-                    ten_the_loai: "SinhTo"
-                }
+        const products = await this.productRepository
+            .createQueryBuilder('p')
+            .leftJoinAndSelect('p.theLoai', 'theLoai')
+            .leftJoinAndSelect('p.khuyenMai', 'khuyenMai')
+            .leftJoin('p.rates', 'rate')
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'SinhTo' })
+            .select([
+            'p.id_product AS id_product',
+            'p.tenSanPham AS tenSanPham',
+            'p.giaSanPham AS giaSanPham',
+            'p.khuyenmai_gia AS khuyenmai_gia',
+            'theLoai.id_theLoai AS theLoaiId',
+            'theLoai.ten_the_loai AS ten_the_loai',
+            'khuyenMai.id_khuyen_mai AS khuyenMaiId',
+            'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
+            'khuyenMai.donHangToiThieu AS donHangToiThieu',
+            'AVG(rate.soLuongSao) AS average_star'
+        ])
+            .groupBy('p.id_product')
+            .addGroupBy('theLoai.id_theLoai')
+            .addGroupBy('khuyenMai.id_khuyen_mai')
+            .orderBy('p.giaSanPham', 'ASC')
+            .getRawMany();
+        return products.map(product => ({
+            id_product: product.id_product,
+            tenSanPham: product.tenSanPham,
+            giaSanPham: product.giaSanPham,
+            khuyenmai_gia: product.khuyenmai_gia,
+            theLoai: {
+                id_theLoai: product.theLoaiId,
+                ten_the_loai: product.ten_the_loai
             },
-            order: {
-                giaSanPham: 'ASC'
-            }
-        });
-        return products;
+            khuyenMai: product.khuyenMaiId ? {
+                id_khuyen_mai: product.khuyenMaiId,
+                phanTramKhuyenMai: product.phanTramKhuyenMai,
+                donHangToiThieu: product.donHangToiThieu
+            } : null,
+            average_star: parseFloat(product.average_star) || 0
+        }));
     }
     async getSinhToFilterKhuyenMai() {
-        const products = await this.productRepository.find({
-            relations: ["theLoai"],
-            where: {
-                theLoai: {
-                    ten_the_loai: "SinhTo"
-                }
+        const products = await this.productRepository
+            .createQueryBuilder('p')
+            .leftJoinAndSelect('p.theLoai', 'theLoai')
+            .leftJoinAndSelect('p.khuyenMai', 'khuyenMai')
+            .leftJoin('p.rates', 'rate')
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'SinhTo' })
+            .select([
+            'p.id_product AS id_product',
+            'p.tenSanPham AS tenSanPham',
+            'p.giaSanPham AS giaSanPham',
+            'p.khuyenmai_gia AS khuyenmai_gia',
+            'theLoai.id_theLoai AS theLoaiId',
+            'theLoai.ten_the_loai AS ten_the_loai',
+            'khuyenMai.id_khuyen_mai AS khuyenMaiId',
+            'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
+            'khuyenMai.donHangToiThieu AS donHangToiThieu',
+            'AVG(rate.soLuongSao) AS average_star'
+        ])
+            .groupBy('p.id_product')
+            .addGroupBy('theLoai.id_theLoai')
+            .addGroupBy('khuyenMai.id_khuyen_mai')
+            .orderBy('p.khuyenmai_gia', 'DESC')
+            .getRawMany();
+        return products.map(product => ({
+            id_product: product.id_product,
+            tenSanPham: product.tenSanPham,
+            giaSanPham: product.giaSanPham,
+            khuyenmai_gia: product.khuyenmai_gia,
+            theLoai: {
+                id_theLoai: product.theLoaiId,
+                ten_the_loai: product.ten_the_loai
             },
-            order: {
-                khuyenmai_gia: 'DESC'
-            }
-        });
-        return products;
+            khuyenMai: product.khuyenMaiId ? {
+                id_khuyen_mai: product.khuyenMaiId,
+                phanTramKhuyenMai: product.phanTramKhuyenMai,
+                donHangToiThieu: product.donHangToiThieu
+            } : null,
+            average_star: parseFloat(product.average_star) || 0
+        }));
     }
     async getSinhToFilterRate() {
-        const products = await this.productRepository.createQueryBuilder('p')
-            .leftJoinAndSelect('p.rates', 'r')
-            .innerJoin('p.theLoai', 'tl')
-            .where('tl.ten_the_loai = :tenTheLoai', { tenTheLoai: 'SinhTo' })
-            .select('p.id_product AS p_id_product')
-            .addSelect('p.tenSanPham AS p_tenSanPham')
-            .addSelect('AVG(r.soLuongSao) AS average_rating')
-            .addSelect('tl.ten_the_loai AS p_ten_the_loai')
-            .groupBy('p.id_product, p.tenSanPham, tl.ten_the_loai')
-            .orderBy('average_rating', 'DESC')
+        console.log("Fetching coffee products with average ratings...");
+        const products = await this.productRepository
+            .createQueryBuilder('product')
+            .leftJoinAndSelect('product.theLoai', 'theLoai')
+            .leftJoinAndSelect('product.khuyenMai', 'khuyenMai')
+            .leftJoin('product.rates', 'rate')
+            .select([
+            'product.id_product AS id_product',
+            'product.tenSanPham AS tenSanPham',
+            'product.giaSanPham AS giaSanPham',
+            'product.khuyenmai_gia AS khuyenmai_gia',
+            'theLoai.id_theLoai AS theLoai_id_theLoai',
+            'theLoai.ten_the_loai AS theLoai_ten_the_loai',
+            'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
+            'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
+            'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
+            'COALESCE(AVG(rate.soLuongSao), 0) AS average_star'
+        ])
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'SinhTo' })
+            .groupBy('product.id_product')
+            .addGroupBy('theLoai.id_theLoai')
+            .addGroupBy('theLoai.ten_the_loai')
+            .addGroupBy('khuyenMai.id_khuyen_mai')
+            .addGroupBy('khuyenMai.phanTramKhuyenMai')
+            .addGroupBy('khuyenMai.donHangToiThieu')
+            .orderBy('average_star', 'DESC')
             .getRawMany();
-        return products;
+        const formattedProducts = products.map(product => ({
+            id_product: product.id_product,
+            tenSanPham: product.tenSanPham,
+            giaSanPham: product.giaSanPham,
+            khuyenmai_gia: product.khuyenmai_gia,
+            theLoai: {
+                id_theLoai: product.theLoai_id_theLoai,
+                ten_the_loai: product.theLoai_ten_the_loai,
+            },
+            khuyenMai: {
+                id_khuyen_mai: product.khuyenMai_id_khuyen_mai,
+                phanTramKhuyenMai: product.khuyenMai_phanTramKhuyenMai,
+                donHangToiThieu: product.khuyenMai_donHangToiThieu,
+            },
+            average_star: parseFloat(product.average_star)
+        }));
+        return formattedProducts;
     }
 };
 exports.ProductService = ProductService;
 exports.ProductService = ProductService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(product_entity_1.ProductEntity)),
-    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object])
+    __param(1, (0, typeorm_1.InjectRepository)(rate_entity_1.RateEntity)),
+    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object, typeof (_b = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _b : Object])
 ], ProductService);
 
 
@@ -1903,12 +2259,181 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RateModule = void 0;
+const common_1 = __webpack_require__(6);
+const typeorm_1 = __webpack_require__(9);
+const rate_entity_1 = __webpack_require__(11);
+const rate_controller_1 = __webpack_require__(37);
+const rate_service_1 = __webpack_require__(38);
+const product_entity_1 = __webpack_require__(12);
+const user_entity_1 = __webpack_require__(10);
+let RateModule = class RateModule {
+};
+exports.RateModule = RateModule;
+exports.RateModule = RateModule = __decorate([
+    (0, common_1.Module)({
+        imports: [
+            typeorm_1.TypeOrmModule.forFeature([rate_entity_1.RateEntity, product_entity_1.ProductEntity, user_entity_1.UserEntity])
+        ],
+        controllers: [rate_controller_1.RateController],
+        providers: [rate_service_1.RateService]
+    })
+], RateModule);
+
+
+/***/ }),
+/* 37 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a, _b, _c, _d;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RateController = void 0;
+const common_1 = __webpack_require__(6);
+const globalClass_1 = __webpack_require__(21);
+const gobalEnum_1 = __webpack_require__(22);
+const rate_service_1 = __webpack_require__(38);
+const rate_entity_1 = __webpack_require__(11);
+let RateController = class RateController {
+    constructor(rateService) {
+        this.rateService = rateService;
+    }
+    async createRate(rate) {
+        try {
+            console.log(rate);
+            await this.rateService.save(rate);
+            return new globalClass_1.ResponseData(null, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            return new globalClass_1.ResponseData(null, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+    async getCountRateByIdProduct(id_product) {
+        try {
+            const count_rate = await this.rateService.getCountRate(id_product);
+            return new globalClass_1.ResponseData(count_rate, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            return new globalClass_1.ResponseData(null, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+};
+exports.RateController = RateController;
+__decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_b = typeof rate_entity_1.RateEntity !== "undefined" && rate_entity_1.RateEntity) === "function" ? _b : Object]),
+    __metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
+], RateController.prototype, "createRate", null);
+__decorate([
+    (0, common_1.Get)('/:id_product/count_rate'),
+    __param(0, (0, common_1.Param)('id_product')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
+], RateController.prototype, "getCountRateByIdProduct", null);
+exports.RateController = RateController = __decorate([
+    (0, common_1.Controller)('rate'),
+    __metadata("design:paramtypes", [typeof (_a = typeof rate_service_1.RateService !== "undefined" && rate_service_1.RateService) === "function" ? _a : Object])
+], RateController);
+
+
+/***/ }),
+/* 38 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a, _b, _c;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RateService = void 0;
+const common_1 = __webpack_require__(6);
+const typeorm_1 = __webpack_require__(9);
+const typeorm_2 = __webpack_require__(14);
+const rate_entity_1 = __webpack_require__(11);
+const user_entity_1 = __webpack_require__(10);
+const product_entity_1 = __webpack_require__(12);
+let RateService = class RateService {
+    constructor(rateRepository, userRepository, productRepository) {
+        this.rateRepository = rateRepository;
+        this.userRepository = userRepository;
+        this.productRepository = productRepository;
+    }
+    async save(rate) {
+        const user = await this.userRepository.findOne({ where: { id_user: rate.id_user } });
+        const product = await this.productRepository.findOne({ where: { id_product: rate.id_product } });
+        if (!user) {
+            throw new Error(`User with ID ${rate.id_user} does not exist`);
+        }
+        if (!product) {
+            throw new Error(`Product with ID ${rate.id_product} does not exist`);
+        }
+        await this.rateRepository.query(`CALL UpsertRate(?, ?, ?, ?)`, [rate.id_product, rate.id_user, rate.soLuongSao, rate.comment]);
+    }
+    async getCountRate(id_product) {
+        const count = await this.rateRepository.findAndCount({
+            where: {
+                product: { id_product: id_product }
+            }
+        });
+        return count[1];
+    }
+};
+exports.RateService = RateService;
+exports.RateService = RateService = __decorate([
+    (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_1.InjectRepository)(rate_entity_1.RateEntity)),
+    __param(1, (0, typeorm_1.InjectRepository)(user_entity_1.UserEntity)),
+    __param(2, (0, typeorm_1.InjectRepository)(product_entity_1.ProductEntity)),
+    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object, typeof (_b = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _b : Object, typeof (_c = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _c : Object])
+], RateService);
+
+
+/***/ }),
+/* 39 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProductToppingModule = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(9);
 const product_topping_entity_1 = __webpack_require__(15);
-const product_topping_service_1 = __webpack_require__(37);
-const product_topping_controller_1 = __webpack_require__(38);
+const product_topping_service_1 = __webpack_require__(40);
+const product_topping_controller_1 = __webpack_require__(41);
 let ProductToppingModule = class ProductToppingModule {
 };
 exports.ProductToppingModule = ProductToppingModule;
@@ -1924,7 +2449,7 @@ exports.ProductToppingModule = ProductToppingModule = __decorate([
 
 
 /***/ }),
-/* 37 */
+/* 40 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1962,7 +2487,7 @@ exports.ProductToppingService = ProductToppingService = __decorate([
 
 
 /***/ }),
-/* 38 */
+/* 41 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1980,7 +2505,7 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProductToppingController = void 0;
 const common_1 = __webpack_require__(6);
-const product_topping_service_1 = __webpack_require__(37);
+const product_topping_service_1 = __webpack_require__(40);
 let ProductToppingController = class ProductToppingController {
     constructor(productToppingService) {
         this.productToppingService = productToppingService;
@@ -1991,109 +2516,6 @@ exports.ProductToppingController = ProductToppingController = __decorate([
     (0, common_1.Controller)('rate'),
     __metadata("design:paramtypes", [typeof (_a = typeof product_topping_service_1.ProductToppingService !== "undefined" && product_topping_service_1.ProductToppingService) === "function" ? _a : Object])
 ], ProductToppingController);
-
-
-/***/ }),
-/* 39 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.RateModule = void 0;
-const common_1 = __webpack_require__(6);
-const typeorm_1 = __webpack_require__(9);
-const rate_entity_1 = __webpack_require__(11);
-const rate_controller_1 = __webpack_require__(40);
-const rate_service_1 = __webpack_require__(41);
-let RateModule = class RateModule {
-};
-exports.RateModule = RateModule;
-exports.RateModule = RateModule = __decorate([
-    (0, common_1.Module)({
-        imports: [
-            typeorm_1.TypeOrmModule.forFeature([rate_entity_1.RateEntity])
-        ],
-        controllers: [rate_controller_1.RateController],
-        providers: [rate_service_1.RateService]
-    })
-], RateModule);
-
-
-/***/ }),
-/* 40 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var _a;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.RateController = void 0;
-const common_1 = __webpack_require__(6);
-const rate_service_1 = __webpack_require__(41);
-let RateController = class RateController {
-    constructor(rateService) {
-        this.rateService = rateService;
-    }
-};
-exports.RateController = RateController;
-exports.RateController = RateController = __decorate([
-    (0, common_1.Controller)('rate'),
-    __metadata("design:paramtypes", [typeof (_a = typeof rate_service_1.RateService !== "undefined" && rate_service_1.RateService) === "function" ? _a : Object])
-], RateController);
-
-
-/***/ }),
-/* 41 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-var _a;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.RateService = void 0;
-const common_1 = __webpack_require__(6);
-const typeorm_1 = __webpack_require__(9);
-const typeorm_2 = __webpack_require__(14);
-const rate_entity_1 = __webpack_require__(11);
-let RateService = class RateService {
-    constructor(rateRepository) {
-        this.rateRepository = rateRepository;
-    }
-};
-exports.RateService = RateService;
-exports.RateService = RateService = __decorate([
-    (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(rate_entity_1.RateEntity)),
-    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object])
-], RateService);
 
 
 /***/ })
@@ -2158,7 +2580,7 @@ exports.RateService = RateService = __decorate([
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("3835038e0155c1505f53")
+/******/ 		__webpack_require__.h = () => ("8df515b6bac5bc6c4aee")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
