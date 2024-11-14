@@ -10,10 +10,9 @@ export class ProductToppingService {
         @InjectRepository(ProductToppingEntity) private readonly productToppingRepository: Repository<ProductToppingEntity>
     ){}
 
-    // async save(rate: RateEntity): Promise<RateEntity>{
-    //     const rateProduct = await this.rateRepository.save(rate);
-    //     console.log(rateProduct);
-    //     return rateProduct;
-    // }
+    async save(productTopping: ProductToppingEntity): Promise<ProductToppingEntity>{
+        const saveProductTopping = await this.productToppingRepository.save(productTopping);
+        return saveProductTopping;
+    }
 
 }

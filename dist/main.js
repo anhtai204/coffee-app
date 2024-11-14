@@ -193,14 +193,18 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(4);
 const app_module_1 = __webpack_require__(5);
 const common_1 = __webpack_require__(6);
+const path_1 = __webpack_require__(37);
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.useGlobalPipes(new common_1.ValidationPipe());
-    await app.listen(3000);
     if (true) {
         module.hot.accept();
         module.hot.dispose(() => app.close());
     }
+    app.useStaticAssets((0, path_1.join)(__dirname, '..', 'uploads'), {
+        prefix: '/uploads',
+    });
+    await app.listen(3000);
 }
 bootstrap();
 
@@ -235,21 +239,27 @@ const app_controller_1 = __webpack_require__(7);
 const app_service_1 = __webpack_require__(8);
 const typeorm_1 = __webpack_require__(9);
 const user_entity_1 = __webpack_require__(10);
-const user_module_1 = __webpack_require__(18);
+const user_module_1 = __webpack_require__(16);
 const typeorm_2 = __webpack_require__(14);
-const axios_1 = __webpack_require__(23);
-const theloai_entity_1 = __webpack_require__(17);
-const theloai_module_1 = __webpack_require__(24);
-const topping_module_1 = __webpack_require__(27);
-const topping_entity_1 = __webpack_require__(16);
+const axios_1 = __webpack_require__(21);
+const theloai_entity_1 = __webpack_require__(15);
+const theloai_module_1 = __webpack_require__(22);
+const topping_module_1 = __webpack_require__(25);
+const topping_entity_1 = __webpack_require__(26);
 const product_entity_1 = __webpack_require__(12);
-const product_module_1 = __webpack_require__(30);
-const product_topping_entity_1 = __webpack_require__(15);
+const product_module_1 = __webpack_require__(32);
+const product_topping_entity_1 = __webpack_require__(27);
 const rate_entity_1 = __webpack_require__(11);
-const rate_module_1 = __webpack_require__(33);
-const product_topping_module_1 = __webpack_require__(36);
-const khuyenmai_module_1 = __webpack_require__(39);
+const rate_module_1 = __webpack_require__(38);
+const product_topping_module_1 = __webpack_require__(41);
+const khuyenmai_module_1 = __webpack_require__(44);
 const khuyenmai_entity_1 = __webpack_require__(13);
+const phuongthucthanhtoan_entity_1 = __webpack_require__(29);
+const donhang_entity_1 = __webpack_require__(28);
+const phuongthucthanhtoan_module_1 = __webpack_require__(47);
+const donhang_module_1 = __webpack_require__(50);
+const diachi_entity_1 = __webpack_require__(53);
+const diachi_module_1 = __webpack_require__(54);
 let AppModule = class AppModule {
     constructor(dataSource) {
         this.dataSource = dataSource;
@@ -266,7 +276,8 @@ exports.AppModule = AppModule = __decorate([
                 username: 'root',
                 password: '22042004',
                 database: 'coffee_app',
-                entities: [user_entity_1.UserEntity, theloai_entity_1.TheLoaiEntity, topping_entity_1.ToppingEntity, khuyenmai_entity_1.KhuyenMaiEntity, product_entity_1.ProductEntity, product_topping_entity_1.ProductToppingEntity, rate_entity_1.RateEntity],
+                entities: [user_entity_1.UserEntity, theloai_entity_1.TheLoaiEntity, topping_entity_1.ToppingEntity, khuyenmai_entity_1.KhuyenMaiEntity, product_entity_1.ProductEntity, product_topping_entity_1.ProductToppingEntity,
+                    rate_entity_1.RateEntity, phuongthucthanhtoan_entity_1.PhuongThucThanhToanEntity, donhang_entity_1.DonHangEntity, diachi_entity_1.DiaChiEntity],
                 synchronize: false,
             }),
             axios_1.HttpModule,
@@ -277,6 +288,9 @@ exports.AppModule = AppModule = __decorate([
             product_module_1.ProductModule,
             product_topping_module_1.ProductToppingModule,
             rate_module_1.RateModule,
+            phuongthucthanhtoan_module_1.PhuongThucThanhToanModule,
+            donhang_module_1.DonHangModule,
+            diachi_module_1.DiaChiModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
@@ -491,9 +505,8 @@ var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProductEntity = void 0;
 const khuyenmai_entity_1 = __webpack_require__(13);
-const product_topping_entity_1 = __webpack_require__(15);
 const rate_entity_1 = __webpack_require__(11);
-const theloai_entity_1 = __webpack_require__(17);
+const theloai_entity_1 = __webpack_require__(15);
 const typeorm_1 = __webpack_require__(14);
 let ProductEntity = class ProductEntity extends typeorm_1.BaseEntity {
 };
@@ -515,6 +528,14 @@ __decorate([
     __metadata("design:type", Number)
 ], ProductEntity.prototype, "khuyenmai_gia", void 0);
 __decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], ProductEntity.prototype, "logo_product", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], ProductEntity.prototype, "mo_ta", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => theloai_entity_1.TheLoaiEntity, theLoai => theLoai.products, { eager: true }),
     (0, typeorm_1.JoinColumn)({ name: 'id_theLoai' }),
     __metadata("design:type", typeof (_a = typeof theloai_entity_1.TheLoaiEntity !== "undefined" && theloai_entity_1.TheLoaiEntity) === "function" ? _a : Object)
@@ -524,10 +545,6 @@ __decorate([
     (0, typeorm_1.JoinColumn)({ name: 'id_khuyen_mai' }),
     __metadata("design:type", typeof (_b = typeof khuyenmai_entity_1.KhuyenMaiEntity !== "undefined" && khuyenmai_entity_1.KhuyenMaiEntity) === "function" ? _b : Object)
 ], ProductEntity.prototype, "khuyenMai", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => product_topping_entity_1.ProductToppingEntity, (productTopping) => productTopping.product),
-    __metadata("design:type", Array)
-], ProductEntity.prototype, "productToppings", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => rate_entity_1.RateEntity, rate => rate.product),
     __metadata("design:type", Array)
@@ -565,7 +582,7 @@ __decorate([
     __metadata("design:type", Number)
 ], KhuyenMaiEntity.prototype, "id_khuyen_mai", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ type: 'float' }),
     __metadata("design:type", Number)
 ], KhuyenMaiEntity.prototype, "phanTramKhuyenMai", void 0);
 __decorate([
@@ -590,94 +607,6 @@ module.exports = require("typeorm");
 
 /***/ }),
 /* 15 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var _a, _b;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ProductToppingEntity = void 0;
-const product_entity_1 = __webpack_require__(12);
-const topping_entity_1 = __webpack_require__(16);
-const typeorm_1 = __webpack_require__(14);
-let ProductToppingEntity = class ProductToppingEntity {
-};
-exports.ProductToppingEntity = ProductToppingEntity;
-__decorate([
-    (0, typeorm_1.PrimaryColumn)({ name: 'product_id' }),
-    __metadata("design:type", Number)
-], ProductToppingEntity.prototype, "productId", void 0);
-__decorate([
-    (0, typeorm_1.PrimaryColumn)({ name: 'topping_id' }),
-    __metadata("design:type", Number)
-], ProductToppingEntity.prototype, "toppingId", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => product_entity_1.ProductEntity, (product) => product.productToppings),
-    __metadata("design:type", typeof (_a = typeof product_entity_1.ProductEntity !== "undefined" && product_entity_1.ProductEntity) === "function" ? _a : Object)
-], ProductToppingEntity.prototype, "product", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => topping_entity_1.ToppingEntity, (topping) => topping.productToppings),
-    __metadata("design:type", typeof (_b = typeof topping_entity_1.ToppingEntity !== "undefined" && topping_entity_1.ToppingEntity) === "function" ? _b : Object)
-], ProductToppingEntity.prototype, "topping", void 0);
-exports.ProductToppingEntity = ProductToppingEntity = __decorate([
-    (0, typeorm_1.Entity)('product_topping')
-], ProductToppingEntity);
-
-
-/***/ }),
-/* 16 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ToppingEntity = void 0;
-const product_topping_entity_1 = __webpack_require__(15);
-const typeorm_1 = __webpack_require__(14);
-let ToppingEntity = class ToppingEntity extends typeorm_1.BaseEntity {
-};
-exports.ToppingEntity = ToppingEntity;
-__decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
-    __metadata("design:type", Number)
-], ToppingEntity.prototype, "id_topping", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], ToppingEntity.prototype, "topping_name", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
-], ToppingEntity.prototype, "giaTopping", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => product_topping_entity_1.ProductToppingEntity, (productTopping) => productTopping.topping),
-    __metadata("design:type", Array)
-], ToppingEntity.prototype, "productToppings", void 0);
-exports.ToppingEntity = ToppingEntity = __decorate([
-    (0, typeorm_1.Entity)("topping")
-], ToppingEntity);
-
-
-/***/ }),
-/* 17 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -716,7 +645,7 @@ exports.TheLoaiEntity = TheLoaiEntity = __decorate([
 
 
 /***/ }),
-/* 18 */
+/* 16 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -732,8 +661,8 @@ exports.UsersModule = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(9);
 const user_entity_1 = __webpack_require__(10);
-const user_controller_1 = __webpack_require__(19);
-const user_service_1 = __webpack_require__(20);
+const user_controller_1 = __webpack_require__(17);
+const user_service_1 = __webpack_require__(18);
 let UsersModule = class UsersModule {
 };
 exports.UsersModule = UsersModule;
@@ -749,7 +678,7 @@ exports.UsersModule = UsersModule = __decorate([
 
 
 /***/ }),
-/* 19 */
+/* 17 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -766,14 +695,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b, _c, _d, _e, _f, _g;
+var _a, _b, _c, _d, _e, _f, _g, _h;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserController = void 0;
 const common_1 = __webpack_require__(6);
-const user_service_1 = __webpack_require__(20);
+const user_service_1 = __webpack_require__(18);
 const user_entity_1 = __webpack_require__(10);
-const globalClass_1 = __webpack_require__(21);
-const gobalEnum_1 = __webpack_require__(22);
+const globalClass_1 = __webpack_require__(19);
+const gobalEnum_1 = __webpack_require__(20);
 let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
@@ -820,6 +749,15 @@ let UserController = class UserController {
             return new globalClass_1.ResponseData(false, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
         }
     }
+    async getDonHangByIdUser(id_user) {
+        try {
+            const user = await this.userService.getUserById(id_user);
+            return new globalClass_1.ResponseData(user, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            return new globalClass_1.ResponseData(null, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
 };
 exports.UserController = UserController;
 __decorate([
@@ -858,6 +796,13 @@ __decorate([
     __metadata("design:paramtypes", [Number, String]),
     __metadata("design:returntype", typeof (_g = typeof Promise !== "undefined" && Promise) === "function" ? _g : Object)
 ], UserController.prototype, "changePasswordFromId", null);
+__decorate([
+    (0, common_1.Get)('/:id_user'),
+    __param(0, (0, common_1.Param)('id_user')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", typeof (_h = typeof Promise !== "undefined" && Promise) === "function" ? _h : Object)
+], UserController.prototype, "getDonHangByIdUser", null);
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [typeof (_a = typeof user_service_1.UserService !== "undefined" && user_service_1.UserService) === "function" ? _a : Object])
@@ -865,7 +810,7 @@ exports.UserController = UserController = __decorate([
 
 
 /***/ }),
-/* 20 */
+/* 18 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -931,6 +876,14 @@ let UserService = class UserService {
             return false;
         }
     }
+    async getUserById(id_user) {
+        const user = await this.userRepository.findOne({
+            where: {
+                id_user: id_user
+            }
+        });
+        return user;
+    }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
@@ -941,7 +894,7 @@ exports.UserService = UserService = __decorate([
 
 
 /***/ }),
-/* 21 */
+/* 19 */
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -960,7 +913,7 @@ exports.ResponseData = ResponseData;
 
 
 /***/ }),
-/* 22 */
+/* 20 */
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -980,14 +933,14 @@ var HttpMessage;
 
 
 /***/ }),
-/* 23 */
+/* 21 */
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("@nestjs/axios");
 
 /***/ }),
-/* 24 */
+/* 22 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1002,9 +955,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TheLoaiModule = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(9);
-const theloai_entity_1 = __webpack_require__(17);
-const theloai_controller_1 = __webpack_require__(25);
-const theloai_service_1 = __webpack_require__(26);
+const theloai_entity_1 = __webpack_require__(15);
+const theloai_controller_1 = __webpack_require__(23);
+const theloai_service_1 = __webpack_require__(24);
 let TheLoaiModule = class TheLoaiModule {
 };
 exports.TheLoaiModule = TheLoaiModule;
@@ -1020,7 +973,7 @@ exports.TheLoaiModule = TheLoaiModule = __decorate([
 
 
 /***/ }),
-/* 25 */
+/* 23 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1037,14 +990,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b, _c, _d;
+var _a, _b, _c, _d, _e, _f;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TheLoaiController = void 0;
 const common_1 = __webpack_require__(6);
-const theloai_service_1 = __webpack_require__(26);
-const theloai_entity_1 = __webpack_require__(17);
-const globalClass_1 = __webpack_require__(21);
-const gobalEnum_1 = __webpack_require__(22);
+const theloai_service_1 = __webpack_require__(24);
+const theloai_entity_1 = __webpack_require__(15);
+const globalClass_1 = __webpack_require__(19);
+const gobalEnum_1 = __webpack_require__(20);
 let TheLoaiController = class TheLoaiController {
     constructor(TheLoaiService) {
         this.TheLoaiService = TheLoaiService;
@@ -1068,6 +1021,25 @@ let TheLoaiController = class TheLoaiController {
             return new globalClass_1.ResponseData([], gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
         }
     }
+    async xoaTheLoaiById(id_theLoai) {
+        const result = await this.TheLoaiService.deleteTheLoai(id_theLoai);
+        if (result) {
+            return new globalClass_1.ResponseData(result, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        else {
+            return new globalClass_1.ResponseData(result, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+    async suaTheLoai(id_theLoai, new_tenTheLoai) {
+        try {
+            const check = await this.TheLoaiService.updateTheLoai(id_theLoai, new_tenTheLoai);
+            return new globalClass_1.ResponseData(check, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            console.error('Error updating theloai:', error);
+            return new globalClass_1.ResponseData(false, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
 };
 exports.TheLoaiController = TheLoaiController;
 __decorate([
@@ -1083,6 +1055,21 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
 ], TheLoaiController.prototype, "getAllTheLoai", null);
+__decorate([
+    (0, common_1.Delete)("/xoa-the-loai/:id_theLoai"),
+    __param(0, (0, common_1.Param)('id_theLoai')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", typeof (_e = typeof Promise !== "undefined" && Promise) === "function" ? _e : Object)
+], TheLoaiController.prototype, "xoaTheLoaiById", null);
+__decorate([
+    (0, common_1.Put)('/sua-the-loai/:id_theLoai'),
+    __param(0, (0, common_1.Param)('id_theLoai')),
+    __param(1, (0, common_1.Body)('new_tenTheLoai')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, String]),
+    __metadata("design:returntype", typeof (_f = typeof Promise !== "undefined" && Promise) === "function" ? _f : Object)
+], TheLoaiController.prototype, "suaTheLoai", null);
 exports.TheLoaiController = TheLoaiController = __decorate([
     (0, common_1.Controller)('theloai'),
     __metadata("design:paramtypes", [typeof (_a = typeof theloai_service_1.TheLoaiService !== "undefined" && theloai_service_1.TheLoaiService) === "function" ? _a : Object])
@@ -1090,7 +1077,7 @@ exports.TheLoaiController = TheLoaiController = __decorate([
 
 
 /***/ }),
-/* 26 */
+/* 24 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1112,20 +1099,51 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TheLoaiService = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(9);
-const theloai_entity_1 = __webpack_require__(17);
+const theloai_entity_1 = __webpack_require__(15);
 const typeorm_2 = __webpack_require__(14);
 let TheLoaiService = class TheLoaiService {
-    constructor(userRepository) {
-        this.userRepository = userRepository;
+    constructor(theLoaiRepository) {
+        this.theLoaiRepository = theLoaiRepository;
     }
     async save(theLoai) {
-        const saveTheLoai = await this.userRepository.save(theLoai);
+        const saveTheLoai = await this.theLoaiRepository.save(theLoai);
         console.log(saveTheLoai);
         return saveTheLoai;
     }
     async getTheLoai() {
-        const theLoai = await this.userRepository.find();
+        const theLoai = await this.theLoaiRepository.find();
         return theLoai;
+    }
+    async deleteTheLoai(id_theLoai) {
+        try {
+            const theLoai = await this.theLoaiRepository.findOne({
+                where: {
+                    id_theLoai: id_theLoai,
+                },
+            });
+            await this.theLoaiRepository.remove(theLoai);
+            return true;
+        }
+        catch (error) {
+            console.error('Lỗi khi xóa thể loại:', error);
+            return false;
+        }
+    }
+    async updateTheLoai(id_theLoai, new_tenTheLoai) {
+        try {
+            const theLoai = await this.theLoaiRepository.findOne({
+                where: {
+                    id_theLoai: id_theLoai,
+                },
+            });
+            theLoai.ten_the_loai = new_tenTheLoai;
+            await this.theLoaiRepository.save(theLoai);
+            return true;
+        }
+        catch (error) {
+            console.error('Lỗi khi sửa thể loại:', error);
+            return false;
+        }
     }
 };
 exports.TheLoaiService = TheLoaiService;
@@ -1137,7 +1155,7 @@ exports.TheLoaiService = TheLoaiService = __decorate([
 
 
 /***/ }),
-/* 27 */
+/* 25 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1152,9 +1170,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ToppingModule = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(9);
-const topping_entity_1 = __webpack_require__(16);
-const topping_controller_1 = __webpack_require__(28);
-const topping_service_1 = __webpack_require__(29);
+const topping_entity_1 = __webpack_require__(26);
+const topping_controller_1 = __webpack_require__(30);
+const topping_service_1 = __webpack_require__(31);
 let ToppingModule = class ToppingModule {
 };
 exports.ToppingModule = ToppingModule;
@@ -1167,6 +1185,100 @@ exports.ToppingModule = ToppingModule = __decorate([
         providers: [topping_service_1.ToppingService]
     })
 ], ToppingModule);
+
+
+/***/ }),
+/* 26 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ToppingEntity = void 0;
+const product_topping_entity_1 = __webpack_require__(27);
+const typeorm_1 = __webpack_require__(14);
+let ToppingEntity = class ToppingEntity extends typeorm_1.BaseEntity {
+};
+exports.ToppingEntity = ToppingEntity;
+__decorate([
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
+], ToppingEntity.prototype, "id_topping", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], ToppingEntity.prototype, "topping_name", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], ToppingEntity.prototype, "giaTopping", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => product_topping_entity_1.ProductToppingEntity, (productTopping) => productTopping.topping),
+    __metadata("design:type", Array)
+], ToppingEntity.prototype, "productToppings", void 0);
+exports.ToppingEntity = ToppingEntity = __decorate([
+    (0, typeorm_1.Entity)("topping")
+], ToppingEntity);
+
+
+/***/ }),
+/* 27 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ProductToppingEntity = void 0;
+const donhang_entity_1 = __webpack_require__(28);
+const topping_entity_1 = __webpack_require__(26);
+const typeorm_1 = __webpack_require__(14);
+let ProductToppingEntity = class ProductToppingEntity {
+};
+exports.ProductToppingEntity = ProductToppingEntity;
+__decorate([
+    (0, typeorm_1.PrimaryColumn)(),
+    __metadata("design:type", Number)
+], ProductToppingEntity.prototype, "id_product_topping", void 0);
+__decorate([
+    (0, typeorm_1.PrimaryColumn)(),
+    __metadata("design:type", Number)
+], ProductToppingEntity.prototype, "id_don_hang", void 0);
+__decorate([
+    (0, typeorm_1.PrimaryColumn)(),
+    __metadata("design:type", Number)
+], ProductToppingEntity.prototype, "topping_id", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => topping_entity_1.ToppingEntity, (topping) => topping.productToppings),
+    (0, typeorm_1.JoinColumn)({ name: 'topping_id' }),
+    __metadata("design:type", typeof (_a = typeof topping_entity_1.ToppingEntity !== "undefined" && topping_entity_1.ToppingEntity) === "function" ? _a : Object)
+], ProductToppingEntity.prototype, "topping", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => donhang_entity_1.DonHangEntity, (donHang) => donHang.id_donHang),
+    (0, typeorm_1.JoinColumn)({ name: 'id_don_hang' }),
+    __metadata("design:type", typeof (_b = typeof donhang_entity_1.DonHangEntity !== "undefined" && donhang_entity_1.DonHangEntity) === "function" ? _b : Object)
+], ProductToppingEntity.prototype, "donHang", void 0);
+exports.ProductToppingEntity = ProductToppingEntity = __decorate([
+    (0, typeorm_1.Entity)('product_topping')
+], ProductToppingEntity);
 
 
 /***/ }),
@@ -1184,17 +1296,142 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var _a, _b, _c, _d, _e;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DonHangEntity = void 0;
+const khuyenmai_entity_1 = __webpack_require__(13);
+const phuongthucthanhtoan_entity_1 = __webpack_require__(29);
+const product_entity_1 = __webpack_require__(12);
+const user_entity_1 = __webpack_require__(10);
+const typeorm_1 = __webpack_require__(14);
+let DonHangEntity = class DonHangEntity {
+};
+exports.DonHangEntity = DonHangEntity;
+__decorate([
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
+], DonHangEntity.prototype, "id_donHang", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], DonHangEntity.prototype, "id_user", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], DonHangEntity.prototype, "id_product", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], DonHangEntity.prototype, "soLuong", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", typeof (_a = typeof String !== "undefined" && String) === "function" ? _a : Object)
+], DonHangEntity.prototype, "tuyChinh", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.UserEntity),
+    (0, typeorm_1.JoinColumn)({ name: 'id_user' }),
+    __metadata("design:type", typeof (_b = typeof user_entity_1.UserEntity !== "undefined" && user_entity_1.UserEntity) === "function" ? _b : Object)
+], DonHangEntity.prototype, "user", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => product_entity_1.ProductEntity),
+    (0, typeorm_1.JoinColumn)({ name: 'id_product' }),
+    __metadata("design:type", typeof (_c = typeof product_entity_1.ProductEntity !== "undefined" && product_entity_1.ProductEntity) === "function" ? _c : Object)
+], DonHangEntity.prototype, "product", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => khuyenmai_entity_1.KhuyenMaiEntity, { nullable: true }),
+    (0, typeorm_1.JoinColumn)({ name: 'id_khuyenMai' }),
+    __metadata("design:type", typeof (_d = typeof khuyenmai_entity_1.KhuyenMaiEntity !== "undefined" && khuyenmai_entity_1.KhuyenMaiEntity) === "function" ? _d : Object)
+], DonHangEntity.prototype, "khuyenMai", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => phuongthucthanhtoan_entity_1.PhuongThucThanhToanEntity, { nullable: true }),
+    (0, typeorm_1.JoinColumn)({ name: 'id_phuong_thuc_thanh_toan' }),
+    __metadata("design:type", typeof (_e = typeof phuongthucthanhtoan_entity_1.PhuongThucThanhToanEntity !== "undefined" && phuongthucthanhtoan_entity_1.PhuongThucThanhToanEntity) === "function" ? _e : Object)
+], DonHangEntity.prototype, "phuongThucThanhToan", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], DonHangEntity.prototype, "id_phuong_thuc_thanh_toan", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], DonHangEntity.prototype, "status", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], DonHangEntity.prototype, "ghiChu", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], DonHangEntity.prototype, "giaDonHang", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], DonHangEntity.prototype, "diaChi", void 0);
+exports.DonHangEntity = DonHangEntity = __decorate([
+    (0, typeorm_1.Entity)('donhang')
+], DonHangEntity);
+
+
+/***/ }),
+/* 29 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PhuongThucThanhToanEntity = void 0;
+const typeorm_1 = __webpack_require__(14);
+let PhuongThucThanhToanEntity = class PhuongThucThanhToanEntity extends typeorm_1.BaseEntity {
+};
+exports.PhuongThucThanhToanEntity = PhuongThucThanhToanEntity;
+__decorate([
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
+], PhuongThucThanhToanEntity.prototype, "id_phuongThucThanhToan", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], PhuongThucThanhToanEntity.prototype, "hinhThucThanhToan", void 0);
+exports.PhuongThucThanhToanEntity = PhuongThucThanhToanEntity = __decorate([
+    (0, typeorm_1.Entity)("phuongthucthanhtoan")
+], PhuongThucThanhToanEntity);
+
+
+/***/ }),
+/* 30 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b, _c, _d;
+var _a, _b, _c, _d, _e, _f, _g;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ToppingController = void 0;
 const common_1 = __webpack_require__(6);
-const topping_service_1 = __webpack_require__(29);
-const topping_entity_1 = __webpack_require__(16);
-const globalClass_1 = __webpack_require__(21);
-const gobalEnum_1 = __webpack_require__(22);
+const topping_service_1 = __webpack_require__(31);
+const topping_entity_1 = __webpack_require__(26);
+const globalClass_1 = __webpack_require__(19);
+const gobalEnum_1 = __webpack_require__(20);
 let ToppingController = class ToppingController {
     constructor(ToppingService) {
         this.ToppingService = ToppingService;
@@ -1220,6 +1457,25 @@ let ToppingController = class ToppingController {
             return new globalClass_1.ResponseData([], gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
         }
     }
+    async xoaToppingById(id_topping) {
+        const result = await this.ToppingService.deleteTopping(id_topping);
+        if (result) {
+            return new globalClass_1.ResponseData(result, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        else {
+            return new globalClass_1.ResponseData(result, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+    async updateTopping(id_topping, update_topping) {
+        try {
+            const topping = await this.ToppingService.updateTopping(id_topping, update_topping);
+            return new globalClass_1.ResponseData(topping, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            console.error('Error updating topping:', error);
+            return new globalClass_1.ResponseData(null, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
 };
 exports.ToppingController = ToppingController;
 __decorate([
@@ -1235,6 +1491,21 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
 ], ToppingController.prototype, "getAllTopping", null);
+__decorate([
+    (0, common_1.Delete)("/delete-topping/:id_topping"),
+    __param(0, (0, common_1.Param)('id_topping')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", typeof (_e = typeof Promise !== "undefined" && Promise) === "function" ? _e : Object)
+], ToppingController.prototype, "xoaToppingById", null);
+__decorate([
+    (0, common_1.Put)('/update-topping/:id_topping'),
+    __param(0, (0, common_1.Param)('id_topping')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, typeof (_f = typeof topping_entity_1.ToppingEntity !== "undefined" && topping_entity_1.ToppingEntity) === "function" ? _f : Object]),
+    __metadata("design:returntype", typeof (_g = typeof Promise !== "undefined" && Promise) === "function" ? _g : Object)
+], ToppingController.prototype, "updateTopping", null);
 exports.ToppingController = ToppingController = __decorate([
     (0, common_1.Controller)('topping'),
     __metadata("design:paramtypes", [typeof (_a = typeof topping_service_1.ToppingService !== "undefined" && topping_service_1.ToppingService) === "function" ? _a : Object])
@@ -1242,7 +1513,7 @@ exports.ToppingController = ToppingController = __decorate([
 
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1264,20 +1535,52 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ToppingService = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(9);
-const topping_entity_1 = __webpack_require__(16);
+const topping_entity_1 = __webpack_require__(26);
 const typeorm_2 = __webpack_require__(14);
 let ToppingService = class ToppingService {
-    constructor(userRepository) {
-        this.userRepository = userRepository;
+    constructor(toppingRepository) {
+        this.toppingRepository = toppingRepository;
     }
     async save(topping) {
-        const saveTopping = await this.userRepository.save(topping);
+        const saveTopping = await this.toppingRepository.save(topping);
         console.log(saveTopping);
         return saveTopping;
     }
     async getTopping() {
-        const toppings = await this.userRepository.find();
+        const toppings = await this.toppingRepository.find();
         return toppings;
+    }
+    async deleteTopping(id_topping) {
+        try {
+            const topping = await this.toppingRepository.findOne({
+                where: {
+                    id_topping: id_topping,
+                },
+            });
+            await this.toppingRepository.remove(topping);
+            return true;
+        }
+        catch (error) {
+            console.error("Lỗi khi xóa topping", error);
+            return false;
+        }
+    }
+    async updateTopping(id_topping, update_topping) {
+        try {
+            const topping = await this.toppingRepository.findOne({
+                where: {
+                    id_topping: id_topping,
+                },
+            });
+            topping.topping_name = update_topping.topping_name;
+            topping.giaTopping = update_topping.giaTopping;
+            await this.toppingRepository.save(topping);
+            return topping;
+        }
+        catch (error) {
+            console.error('Lỗi khi sửa topping:', error);
+            return;
+        }
     }
 };
 exports.ToppingService = ToppingService;
@@ -1289,7 +1592,7 @@ exports.ToppingService = ToppingService = __decorate([
 
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1305,10 +1608,10 @@ exports.ProductModule = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(9);
 const product_entity_1 = __webpack_require__(12);
-const product_controller_1 = __webpack_require__(31);
-const product_service_1 = __webpack_require__(32);
+const product_controller_1 = __webpack_require__(33);
+const product_service_1 = __webpack_require__(34);
 const rate_entity_1 = __webpack_require__(11);
-const rate_module_1 = __webpack_require__(33);
+const rate_module_1 = __webpack_require__(38);
 let ProductModule = class ProductModule {
 };
 exports.ProductModule = ProductModule;
@@ -1325,7 +1628,7 @@ exports.ProductModule = ProductModule = __decorate([
 
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1342,17 +1645,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProductController = void 0;
 const common_1 = __webpack_require__(6);
-const globalClass_1 = __webpack_require__(21);
-const gobalEnum_1 = __webpack_require__(22);
-const product_service_1 = __webpack_require__(32);
+const globalClass_1 = __webpack_require__(19);
+const gobalEnum_1 = __webpack_require__(20);
+const product_service_1 = __webpack_require__(34);
 const product_entity_1 = __webpack_require__(12);
+const platform_express_1 = __webpack_require__(35);
+const multer_1 = __webpack_require__(36);
+const path_1 = __webpack_require__(37);
 let ProductController = class ProductController {
     constructor(productService) {
         this.productService = productService;
+    }
+    async uploadFile(file, id_product) {
+        const updatedProduct = await this.productService.updateProductLogo(id_product, file.filename);
+        return new globalClass_1.ResponseData(updatedProduct, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
     }
     async createProduct(product) {
         try {
@@ -1367,6 +1677,72 @@ let ProductController = class ProductController {
     async getAllProduct() {
         try {
             const products = await this.productService.getProducts();
+            return new globalClass_1.ResponseData(products, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            return new globalClass_1.ResponseData([], gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+    async deleteProductById(id_product) {
+        const result = await this.productService.deleteProduct(id_product);
+        if (result) {
+            return new globalClass_1.ResponseData(result, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        else {
+            return new globalClass_1.ResponseData(result, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+    async suaProduct(id_product, new_product) {
+        try {
+            const product = await this.productService.updateProduct(id_product, new_product);
+            return new globalClass_1.ResponseData(product, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            console.error('Error updating product:', error);
+            return new globalClass_1.ResponseData(null, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+    async getProductById(id_product) {
+        try {
+            const product = await this.productService.getProductById(id_product);
+            return new globalClass_1.ResponseData(product, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            return new globalClass_1.ResponseData(null, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+    async getOthersProduct() {
+        try {
+            const products = await this.productService.getProductOthers();
+            console.log(products);
+            return new globalClass_1.ResponseData(products, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            return new globalClass_1.ResponseData([], gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+    async getOtherSortCost() {
+        try {
+            const products = await this.productService.getOthersFilterGia();
+            return new globalClass_1.ResponseData(products, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            return new globalClass_1.ResponseData([], gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+    async getOthersSortSale() {
+        try {
+            const products = await this.productService.getOthersFilterKhuyenMai();
+            return new globalClass_1.ResponseData(products, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            return new globalClass_1.ResponseData([], gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+    async getOthersSortRate() {
+        try {
+            const products = await this.productService.getOthersFilterRate();
+            console.log(products);
             return new globalClass_1.ResponseData(products, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
         }
         catch (error) {
@@ -1488,89 +1864,152 @@ let ProductController = class ProductController {
 };
 exports.ProductController = ProductController;
 __decorate([
+    (0, common_1.Post)('upload'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file', {
+        storage: (0, multer_1.diskStorage)({
+            destination: './uploads',
+            filename: (req, file, cb) => {
+                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+                cb(null, `${uniqueSuffix}${(0, path_1.extname)(file.originalname)}`);
+            },
+        }),
+    })),
+    __param(0, (0, common_1.UploadedFile)()),
+    __param(1, (0, common_1.Body)('id_product')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number]),
+    __metadata("design:returntype", typeof (_b = typeof Promise !== "undefined" && Promise) === "function" ? _b : Object)
+], ProductController.prototype, "uploadFile", null);
+__decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [typeof (_b = typeof product_entity_1.ProductEntity !== "undefined" && product_entity_1.ProductEntity) === "function" ? _b : Object]),
-    __metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
+    __metadata("design:paramtypes", [typeof (_c = typeof product_entity_1.ProductEntity !== "undefined" && product_entity_1.ProductEntity) === "function" ? _c : Object]),
+    __metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
 ], ProductController.prototype, "createProduct", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
+    __metadata("design:returntype", typeof (_e = typeof Promise !== "undefined" && Promise) === "function" ? _e : Object)
 ], ProductController.prototype, "getAllProduct", null);
 __decorate([
-    (0, common_1.Get)("/caphe"),
+    (0, common_1.Delete)("delete-product/:id_product"),
+    __param(0, (0, common_1.Param)('id_product')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", typeof (_f = typeof Promise !== "undefined" && Promise) === "function" ? _f : Object)
+], ProductController.prototype, "deleteProductById", null);
+__decorate([
+    (0, common_1.Put)('/update-product/:id_product'),
+    __param(0, (0, common_1.Param)('id_product')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, typeof (_g = typeof product_entity_1.ProductEntity !== "undefined" && product_entity_1.ProductEntity) === "function" ? _g : Object]),
+    __metadata("design:returntype", typeof (_h = typeof Promise !== "undefined" && Promise) === "function" ? _h : Object)
+], ProductController.prototype, "suaProduct", null);
+__decorate([
+    (0, common_1.Get)('/:id_product'),
+    __param(0, (0, common_1.Param)('id_product')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", typeof (_j = typeof Promise !== "undefined" && Promise) === "function" ? _j : Object)
+], ProductController.prototype, "getProductById", null);
+__decorate([
+    (0, common_1.Get)("/others/single"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_e = typeof Promise !== "undefined" && Promise) === "function" ? _e : Object)
+    __metadata("design:returntype", typeof (_k = typeof Promise !== "undefined" && Promise) === "function" ? _k : Object)
+], ProductController.prototype, "getOthersProduct", null);
+__decorate([
+    (0, common_1.Get)("/others/sortCost"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", typeof (_l = typeof Promise !== "undefined" && Promise) === "function" ? _l : Object)
+], ProductController.prototype, "getOtherSortCost", null);
+__decorate([
+    (0, common_1.Get)("/others/sortSale"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", typeof (_m = typeof Promise !== "undefined" && Promise) === "function" ? _m : Object)
+], ProductController.prototype, "getOthersSortSale", null);
+__decorate([
+    (0, common_1.Get)("/others/sortRate"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", typeof (_o = typeof Promise !== "undefined" && Promise) === "function" ? _o : Object)
+], ProductController.prototype, "getOthersSortRate", null);
+__decorate([
+    (0, common_1.Get)("/caphe/single"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", typeof (_p = typeof Promise !== "undefined" && Promise) === "function" ? _p : Object)
 ], ProductController.prototype, "getAllCoffee", null);
 __decorate([
     (0, common_1.Get)("/caphe/sortCost"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_f = typeof Promise !== "undefined" && Promise) === "function" ? _f : Object)
+    __metadata("design:returntype", typeof (_q = typeof Promise !== "undefined" && Promise) === "function" ? _q : Object)
 ], ProductController.prototype, "getCoffeeSortCost", null);
 __decorate([
     (0, common_1.Get)("/caphe/sortSale"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_g = typeof Promise !== "undefined" && Promise) === "function" ? _g : Object)
+    __metadata("design:returntype", typeof (_r = typeof Promise !== "undefined" && Promise) === "function" ? _r : Object)
 ], ProductController.prototype, "getCoffeeSortSale", null);
 __decorate([
     (0, common_1.Get)("/caphe/sortRate"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_h = typeof Promise !== "undefined" && Promise) === "function" ? _h : Object)
+    __metadata("design:returntype", typeof (_s = typeof Promise !== "undefined" && Promise) === "function" ? _s : Object)
 ], ProductController.prototype, "getCoffeeSortRate", null);
 __decorate([
-    (0, common_1.Get)("/trasua"),
+    (0, common_1.Get)("/trasua/single"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_j = typeof Promise !== "undefined" && Promise) === "function" ? _j : Object)
+    __metadata("design:returntype", typeof (_t = typeof Promise !== "undefined" && Promise) === "function" ? _t : Object)
 ], ProductController.prototype, "getAllTraSua", null);
 __decorate([
     (0, common_1.Get)("/trasua/sortCost"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_k = typeof Promise !== "undefined" && Promise) === "function" ? _k : Object)
+    __metadata("design:returntype", typeof (_u = typeof Promise !== "undefined" && Promise) === "function" ? _u : Object)
 ], ProductController.prototype, "getTraSuaSortCost", null);
 __decorate([
     (0, common_1.Get)("/trasua/sortSale"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_l = typeof Promise !== "undefined" && Promise) === "function" ? _l : Object)
+    __metadata("design:returntype", typeof (_v = typeof Promise !== "undefined" && Promise) === "function" ? _v : Object)
 ], ProductController.prototype, "getTraSuaSortSale", null);
 __decorate([
     (0, common_1.Get)("/trasua/sortRate"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_m = typeof Promise !== "undefined" && Promise) === "function" ? _m : Object)
+    __metadata("design:returntype", typeof (_w = typeof Promise !== "undefined" && Promise) === "function" ? _w : Object)
 ], ProductController.prototype, "getTraSuaSortRate", null);
 __decorate([
-    (0, common_1.Get)("/sinhto"),
+    (0, common_1.Get)("/sinhto/single"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_o = typeof Promise !== "undefined" && Promise) === "function" ? _o : Object)
+    __metadata("design:returntype", typeof (_x = typeof Promise !== "undefined" && Promise) === "function" ? _x : Object)
 ], ProductController.prototype, "getAllSinhTo", null);
 __decorate([
     (0, common_1.Get)("/sinhto/sortCost"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_p = typeof Promise !== "undefined" && Promise) === "function" ? _p : Object)
+    __metadata("design:returntype", typeof (_y = typeof Promise !== "undefined" && Promise) === "function" ? _y : Object)
 ], ProductController.prototype, "getSinhToSortCost", null);
 __decorate([
     (0, common_1.Get)("/sinhto/sortSale"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_q = typeof Promise !== "undefined" && Promise) === "function" ? _q : Object)
+    __metadata("design:returntype", typeof (_z = typeof Promise !== "undefined" && Promise) === "function" ? _z : Object)
 ], ProductController.prototype, "getSinhToSortSale", null);
 __decorate([
     (0, common_1.Get)("/sinhto/sortRate"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", typeof (_r = typeof Promise !== "undefined" && Promise) === "function" ? _r : Object)
+    __metadata("design:returntype", typeof (_0 = typeof Promise !== "undefined" && Promise) === "function" ? _0 : Object)
 ], ProductController.prototype, "getSinhToSortRate", null);
 exports.ProductController = ProductController = __decorate([
     (0, common_1.Controller)('product'),
@@ -1579,7 +2018,7 @@ exports.ProductController = ProductController = __decorate([
 
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1609,14 +2048,253 @@ let ProductService = class ProductService {
         this.productRepository = productRepository;
         this.rateRepository = rateRepository;
     }
-    async save(khuyenMai) {
-        const saveProduct = await this.productRepository.save(khuyenMai);
+    async updateProductLogo(id_product, filename) {
+        const product = await this.productRepository.findOneBy({ id_product: id_product });
+        if (!product) {
+            throw new Error('Product not found');
+        }
+        product.logo_product = `/uploads/${filename}`;
+        return await this.productRepository.save(product);
+    }
+    async save(product) {
+        const saveProduct = await this.productRepository.save(product);
         console.log(saveProduct);
         return saveProduct;
     }
     async getProducts() {
         const products = await this.productRepository.find();
         return products;
+    }
+    async getProductById(id_product) {
+        const product = await this.productRepository.findOne({
+            where: {
+                id_product: id_product
+            }
+        });
+        return product;
+    }
+    async deleteProduct(id_product) {
+        try {
+            const product = await this.productRepository.findOne({
+                where: {
+                    id_product: id_product,
+                },
+            });
+            await this.productRepository.remove(product);
+            return true;
+        }
+        catch (error) {
+            console.error("Lỗi khi xóa product", error);
+            return false;
+        }
+    }
+    async updateProduct(id_product, new_product) {
+        try {
+            const product = await this.productRepository.findOne({
+                where: {
+                    id_product: id_product,
+                },
+            });
+            product.tenSanPham = new_product.tenSanPham;
+            product.giaSanPham = new_product.giaSanPham;
+            product.khuyenmai_gia = new_product.khuyenmai_gia;
+            product.logo_product = new_product.logo_product;
+            product.mo_ta = new_product.mo_ta;
+            product.theLoai = new_product.theLoai;
+            product.khuyenMai = new_product.khuyenMai;
+            await this.productRepository.save(product);
+            return product;
+        }
+        catch (error) {
+            console.error('Lỗi khi sửa product:', error);
+            return;
+        }
+    }
+    async getProductOthers() {
+        const products = await this.productRepository
+            .createQueryBuilder('product')
+            .leftJoinAndSelect('product.theLoai', 'theLoai')
+            .leftJoinAndSelect('product.khuyenMai', 'khuyenMai')
+            .leftJoin('product.rates', 'rate')
+            .select([
+            'product.id_product AS id_product',
+            'product.tenSanPham AS tenSanPham',
+            'product.giaSanPham AS giaSanPham',
+            'product.khuyenmai_gia AS khuyenmai_gia',
+            'theLoai.id_theLoai AS theLoai_id_theLoai',
+            'theLoai.ten_the_loai AS theLoai_ten_the_loai',
+            'product.logo_product AS logo_product',
+            'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
+            'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
+            'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
+            'COALESCE(AVG(rate.soLuongSao), 0) AS average_star'
+        ])
+            .where('theLoai.ten_the_loai NOT IN (:...tenTheLoai)', { tenTheLoai: ['Cà Phê', 'Trà Sữa', 'Sinh Tố'] })
+            .groupBy('product.id_product')
+            .addGroupBy('theLoai.id_theLoai')
+            .addGroupBy('theLoai.ten_the_loai')
+            .addGroupBy('khuyenMai.id_khuyen_mai')
+            .addGroupBy('khuyenMai.phanTramKhuyenMai')
+            .addGroupBy('khuyenMai.donHangToiThieu')
+            .getRawMany();
+        const productsWithAverageStar = products.map(product => ({
+            id_product: product.id_product,
+            tenSanPham: product.tenSanPham,
+            giaSanPham: product.giaSanPham,
+            khuyenmai_gia: product.khuyenmai_gia,
+            logo_product: product.logo_product,
+            theLoai: {
+                id_theLoai: product.theLoai_id_theLoai,
+                ten_the_loai: product.theLoai_ten_the_loai,
+            },
+            khuyenMai: {
+                id_khuyen_mai: product.khuyenMai_id_khuyen_mai,
+                phanTramKhuyenMai: product.khuyenMai_phanTramKhuyenMai,
+                donHangToiThieu: product.khuyenMai_donHangToiThieu,
+            },
+            average_star: parseFloat(product.average_star)
+        }));
+        return productsWithAverageStar;
+    }
+    async getOthersFilterGia() {
+        const products = await this.productRepository
+            .createQueryBuilder('p')
+            .leftJoinAndSelect('p.theLoai', 'theLoai')
+            .leftJoinAndSelect('p.khuyenMai', 'khuyenMai')
+            .leftJoin('p.rates', 'rate')
+            .where('theLoai.ten_the_loai NOT IN (:...excludedCategories)', {
+            excludedCategories: ['Cà Phê', 'Sinh Tố', 'Trà Sữa']
+        })
+            .select([
+            'p.id_product AS id_product',
+            'p.tenSanPham AS tenSanPham',
+            'p.giaSanPham AS giaSanPham',
+            'p.khuyenmai_gia AS khuyenmai_gia',
+            'theLoai.id_theLoai AS theLoaiId',
+            'theLoai.ten_the_loai AS ten_the_loai',
+            'p.logo_product AS logo_product',
+            'khuyenMai.id_khuyen_mai AS khuyenMaiId',
+            'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
+            'khuyenMai.donHangToiThieu AS donHangToiThieu',
+            'AVG(rate.soLuongSao) AS average_star'
+        ])
+            .groupBy('p.id_product')
+            .addGroupBy('theLoai.id_theLoai')
+            .addGroupBy('khuyenMai.id_khuyen_mai')
+            .orderBy('p.giaSanPham', 'ASC')
+            .getRawMany();
+        return products.map(product => ({
+            id_product: product.id_product,
+            tenSanPham: product.tenSanPham,
+            giaSanPham: product.giaSanPham,
+            khuyenmai_gia: product.khuyenmai_gia,
+            logo_product: product.logo_product,
+            theLoai: {
+                id_theLoai: product.theLoaiId,
+                ten_the_loai: product.ten_the_loai
+            },
+            khuyenMai: product.khuyenMaiId ? {
+                id_khuyen_mai: product.khuyenMaiId,
+                phanTramKhuyenMai: product.phanTramKhuyenMai,
+                donHangToiThieu: product.donHangToiThieu
+            } : null,
+            average_star: parseFloat(product.average_star) || 0
+        }));
+    }
+    async getOthersFilterKhuyenMai() {
+        const products = await this.productRepository
+            .createQueryBuilder('p')
+            .leftJoinAndSelect('p.theLoai', 'theLoai')
+            .leftJoinAndSelect('p.khuyenMai', 'khuyenMai')
+            .leftJoin('p.rates', 'rate')
+            .where('theLoai.ten_the_loai NOT IN (:...excludedCategories)', {
+            excludedCategories: ['Cà Phê', 'Sinh Tố', 'Trà Sữa']
+        })
+            .select([
+            'p.id_product AS id_product',
+            'p.tenSanPham AS tenSanPham',
+            'p.giaSanPham AS giaSanPham',
+            'p.khuyenmai_gia AS khuyenmai_gia',
+            'theLoai.id_theLoai AS theLoaiId',
+            'theLoai.ten_the_loai AS ten_the_loai',
+            'p.logo_product AS logo_product',
+            'khuyenMai.id_khuyen_mai AS khuyenMaiId',
+            'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
+            'khuyenMai.donHangToiThieu AS donHangToiThieu',
+            'AVG(rate.soLuongSao) AS average_star'
+        ])
+            .groupBy('p.id_product')
+            .addGroupBy('theLoai.id_theLoai')
+            .addGroupBy('khuyenMai.id_khuyen_mai')
+            .orderBy('p.khuyenmai_gia', 'DESC')
+            .getRawMany();
+        return products.map(product => ({
+            id_product: product.id_product,
+            tenSanPham: product.tenSanPham,
+            giaSanPham: product.giaSanPham,
+            khuyenmai_gia: product.khuyenmai_gia,
+            logo_product: product.logo_product,
+            theLoai: {
+                id_theLoai: product.theLoaiId,
+                ten_the_loai: product.ten_the_loai
+            },
+            khuyenMai: product.khuyenMaiId ? {
+                id_khuyen_mai: product.khuyenMaiId,
+                phanTramKhuyenMai: product.phanTramKhuyenMai,
+                donHangToiThieu: product.donHangToiThieu
+            } : null,
+            average_star: parseFloat(product.average_star) || 0
+        }));
+    }
+    async getOthersFilterRate() {
+        console.log("Fetching products with average ratings excluding specific categories...");
+        const products = await this.productRepository
+            .createQueryBuilder('product')
+            .leftJoinAndSelect('product.theLoai', 'theLoai')
+            .leftJoinAndSelect('product.khuyenMai', 'khuyenMai')
+            .leftJoin('product.rates', 'rate')
+            .select([
+            'product.id_product AS id_product',
+            'product.tenSanPham AS tenSanPham',
+            'product.giaSanPham AS giaSanPham',
+            'product.khuyenmai_gia AS khuyenmai_gia',
+            'theLoai.id_theLoai AS theLoai_id_theLoai',
+            'theLoai.ten_the_loai AS theLoai_ten_the_loai',
+            'product.logo_product AS logo_product',
+            'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
+            'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
+            'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
+            'COALESCE(AVG(rate.soLuongSao), 0) AS average_star'
+        ])
+            .where('theLoai.ten_the_loai NOT IN (:...excludedCategories)', {
+            excludedCategories: ['Cà Phê', 'Sinh Tố', 'Trà Sữa']
+        })
+            .groupBy('product.id_product')
+            .addGroupBy('theLoai.id_theLoai')
+            .addGroupBy('theLoai.ten_the_loai')
+            .addGroupBy('khuyenMai.id_khuyen_mai')
+            .addGroupBy('khuyenMai.phanTramKhuyenMai')
+            .addGroupBy('khuyenMai.donHangToiThieu')
+            .orderBy('average_star', 'DESC')
+            .getRawMany();
+        const formattedProducts = products.map(product => ({
+            id_product: product.id_product,
+            tenSanPham: product.tenSanPham,
+            giaSanPham: product.giaSanPham,
+            khuyenmai_gia: product.khuyenmai_gia,
+            logo_product: product.logo_product,
+            theLoai: {
+                id_theLoai: product.theLoai_id_theLoai,
+                ten_the_loai: product.theLoai_ten_the_loai,
+            },
+            khuyenMai: {
+                id_khuyen_mai: product.khuyenMai_id_khuyen_mai,
+                phanTramKhuyenMai: product.khuyenMai_phanTramKhuyenMai,
+                donHangToiThieu: product.khuyenMai_donHangToiThieu,
+            },
+            average_star: parseFloat(product.average_star)
+        }));
+        return formattedProducts;
     }
     async getProductCoffee() {
         const products = await this.productRepository
@@ -1631,12 +2309,13 @@ let ProductService = class ProductService {
             'product.khuyenmai_gia AS khuyenmai_gia',
             'theLoai.id_theLoai AS theLoai_id_theLoai',
             'theLoai.ten_the_loai AS theLoai_ten_the_loai',
+            'product.logo_product AS logo_product',
             'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
             'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
             'COALESCE(AVG(rate.soLuongSao), 0) AS average_star'
         ])
-            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'CaPhe' })
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'Cà Phê' })
             .groupBy('product.id_product')
             .addGroupBy('theLoai.id_theLoai')
             .addGroupBy('theLoai.ten_the_loai')
@@ -1649,6 +2328,7 @@ let ProductService = class ProductService {
             tenSanPham: product.tenSanPham,
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
+            logo_product: product.logo_product,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -1668,7 +2348,7 @@ let ProductService = class ProductService {
             .leftJoinAndSelect('p.theLoai', 'theLoai')
             .leftJoinAndSelect('p.khuyenMai', 'khuyenMai')
             .leftJoin('p.rates', 'rate')
-            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'CaPhe' })
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'Cà Phê' })
             .select([
             'p.id_product AS id_product',
             'p.tenSanPham AS tenSanPham',
@@ -1676,6 +2356,7 @@ let ProductService = class ProductService {
             'p.khuyenmai_gia AS khuyenmai_gia',
             'theLoai.id_theLoai AS theLoaiId',
             'theLoai.ten_the_loai AS ten_the_loai',
+            'p.logo_product AS logo_product',
             'khuyenMai.id_khuyen_mai AS khuyenMaiId',
             'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -1691,6 +2372,7 @@ let ProductService = class ProductService {
             tenSanPham: product.tenSanPham,
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
+            logo_product: product.logo_product,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -1709,7 +2391,7 @@ let ProductService = class ProductService {
             .leftJoinAndSelect('p.theLoai', 'theLoai')
             .leftJoinAndSelect('p.khuyenMai', 'khuyenMai')
             .leftJoin('p.rates', 'rate')
-            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'CaPhe' })
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'Cà Phê' })
             .select([
             'p.id_product AS id_product',
             'p.tenSanPham AS tenSanPham',
@@ -1717,6 +2399,7 @@ let ProductService = class ProductService {
             'p.khuyenmai_gia AS khuyenmai_gia',
             'theLoai.id_theLoai AS theLoaiId',
             'theLoai.ten_the_loai AS ten_the_loai',
+            'p.logo_product AS logo_product',
             'khuyenMai.id_khuyen_mai AS khuyenMaiId',
             'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -1732,6 +2415,7 @@ let ProductService = class ProductService {
             tenSanPham: product.tenSanPham,
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
+            logo_product: product.logo_product,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -1745,7 +2429,7 @@ let ProductService = class ProductService {
         }));
     }
     async getCoffeeFilterRate() {
-        console.log("Fetching coffee products with average ratings...");
+        console.log("Fetching tra sua products with average ratings...");
         const products = await this.productRepository
             .createQueryBuilder('product')
             .leftJoinAndSelect('product.theLoai', 'theLoai')
@@ -1758,12 +2442,13 @@ let ProductService = class ProductService {
             'product.khuyenmai_gia AS khuyenmai_gia',
             'theLoai.id_theLoai AS theLoai_id_theLoai',
             'theLoai.ten_the_loai AS theLoai_ten_the_loai',
+            'product.logo_product AS logo_product',
             'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
             'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
             'COALESCE(AVG(rate.soLuongSao), 0) AS average_star'
         ])
-            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'CaPhe' })
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'Cà Phê' })
             .groupBy('product.id_product')
             .addGroupBy('theLoai.id_theLoai')
             .addGroupBy('theLoai.ten_the_loai')
@@ -1777,6 +2462,7 @@ let ProductService = class ProductService {
             tenSanPham: product.tenSanPham,
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
+            logo_product: product.logo_product,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -1803,12 +2489,13 @@ let ProductService = class ProductService {
             'product.khuyenmai_gia AS khuyenmai_gia',
             'theLoai.id_theLoai AS theLoai_id_theLoai',
             'theLoai.ten_the_loai AS theLoai_ten_the_loai',
+            'product.logo_product AS logo_product',
             'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
             'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
             'COALESCE(AVG(rate.soLuongSao), 0) AS average_star'
         ])
-            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'TraSua' })
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'Trà Sữa' })
             .groupBy('product.id_product')
             .addGroupBy('theLoai.id_theLoai')
             .addGroupBy('theLoai.ten_the_loai')
@@ -1821,6 +2508,7 @@ let ProductService = class ProductService {
             tenSanPham: product.tenSanPham,
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
+            logo_product: product.logo_product,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -1840,7 +2528,7 @@ let ProductService = class ProductService {
             .leftJoinAndSelect('p.theLoai', 'theLoai')
             .leftJoinAndSelect('p.khuyenMai', 'khuyenMai')
             .leftJoin('p.rates', 'rate')
-            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'TraSua' })
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'Trà Sữa' })
             .select([
             'p.id_product AS id_product',
             'p.tenSanPham AS tenSanPham',
@@ -1848,6 +2536,7 @@ let ProductService = class ProductService {
             'p.khuyenmai_gia AS khuyenmai_gia',
             'theLoai.id_theLoai AS theLoaiId',
             'theLoai.ten_the_loai AS ten_the_loai',
+            'p.logo_product AS logo_product',
             'khuyenMai.id_khuyen_mai AS khuyenMaiId',
             'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -1863,6 +2552,7 @@ let ProductService = class ProductService {
             tenSanPham: product.tenSanPham,
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
+            logo_product: product.logo_product,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -1881,7 +2571,7 @@ let ProductService = class ProductService {
             .leftJoinAndSelect('p.theLoai', 'theLoai')
             .leftJoinAndSelect('p.khuyenMai', 'khuyenMai')
             .leftJoin('p.rates', 'rate')
-            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'TraSua' })
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'Trà Sữa' })
             .select([
             'p.id_product AS id_product',
             'p.tenSanPham AS tenSanPham',
@@ -1889,6 +2579,7 @@ let ProductService = class ProductService {
             'p.khuyenmai_gia AS khuyenmai_gia',
             'theLoai.id_theLoai AS theLoaiId',
             'theLoai.ten_the_loai AS ten_the_loai',
+            'p.logo_product AS logo_product',
             'khuyenMai.id_khuyen_mai AS khuyenMaiId',
             'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -1904,6 +2595,7 @@ let ProductService = class ProductService {
             tenSanPham: product.tenSanPham,
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
+            logo_product: product.logo_product,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -1930,12 +2622,13 @@ let ProductService = class ProductService {
             'product.khuyenmai_gia AS khuyenmai_gia',
             'theLoai.id_theLoai AS theLoai_id_theLoai',
             'theLoai.ten_the_loai AS theLoai_ten_the_loai',
+            'product.logo_product AS logo_product',
             'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
             'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
             'COALESCE(AVG(rate.soLuongSao), 0) AS average_star'
         ])
-            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'TraSua' })
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'Trà Sữa' })
             .groupBy('product.id_product')
             .addGroupBy('theLoai.id_theLoai')
             .addGroupBy('theLoai.ten_the_loai')
@@ -1949,6 +2642,7 @@ let ProductService = class ProductService {
             tenSanPham: product.tenSanPham,
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
+            logo_product: product.logo_product,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -1975,12 +2669,13 @@ let ProductService = class ProductService {
             'product.khuyenmai_gia AS khuyenmai_gia',
             'theLoai.id_theLoai AS theLoai_id_theLoai',
             'theLoai.ten_the_loai AS theLoai_ten_the_loai',
+            'product.logo_product AS logo_product',
             'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
             'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
             'COALESCE(AVG(rate.soLuongSao), 0) AS average_star'
         ])
-            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'SinhTo' })
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'Sinh Tố' })
             .groupBy('product.id_product')
             .addGroupBy('theLoai.id_theLoai')
             .addGroupBy('theLoai.ten_the_loai')
@@ -1993,6 +2688,7 @@ let ProductService = class ProductService {
             tenSanPham: product.tenSanPham,
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
+            logo_product: product.logo_product,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -2012,7 +2708,7 @@ let ProductService = class ProductService {
             .leftJoinAndSelect('p.theLoai', 'theLoai')
             .leftJoinAndSelect('p.khuyenMai', 'khuyenMai')
             .leftJoin('p.rates', 'rate')
-            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'SinhTo' })
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'Sinh Tố' })
             .select([
             'p.id_product AS id_product',
             'p.tenSanPham AS tenSanPham',
@@ -2020,6 +2716,7 @@ let ProductService = class ProductService {
             'p.khuyenmai_gia AS khuyenmai_gia',
             'theLoai.id_theLoai AS theLoaiId',
             'theLoai.ten_the_loai AS ten_the_loai',
+            'p.logo_product AS logo_product',
             'khuyenMai.id_khuyen_mai AS khuyenMaiId',
             'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -2035,6 +2732,7 @@ let ProductService = class ProductService {
             tenSanPham: product.tenSanPham,
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
+            logo_product: product.logo_product,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -2053,7 +2751,7 @@ let ProductService = class ProductService {
             .leftJoinAndSelect('p.theLoai', 'theLoai')
             .leftJoinAndSelect('p.khuyenMai', 'khuyenMai')
             .leftJoin('p.rates', 'rate')
-            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'SinhTo' })
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'Sinh Tố' })
             .select([
             'p.id_product AS id_product',
             'p.tenSanPham AS tenSanPham',
@@ -2061,6 +2759,7 @@ let ProductService = class ProductService {
             'p.khuyenmai_gia AS khuyenmai_gia',
             'theLoai.id_theLoai AS theLoaiId',
             'theLoai.ten_the_loai AS ten_the_loai',
+            'p.logo_product AS logo_product',
             'khuyenMai.id_khuyen_mai AS khuyenMaiId',
             'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -2076,6 +2775,7 @@ let ProductService = class ProductService {
             tenSanPham: product.tenSanPham,
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
+            logo_product: product.logo_product,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -2102,12 +2802,13 @@ let ProductService = class ProductService {
             'product.khuyenmai_gia AS khuyenmai_gia',
             'theLoai.id_theLoai AS theLoai_id_theLoai',
             'theLoai.ten_the_loai AS theLoai_ten_the_loai',
+            'product.logo_product AS logo_product',
             'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
             'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
             'COALESCE(AVG(rate.soLuongSao), 0) AS average_star'
         ])
-            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'SinhTo' })
+            .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'Sinh Tố' })
             .groupBy('product.id_product')
             .addGroupBy('theLoai.id_theLoai')
             .addGroupBy('theLoai.ten_the_loai')
@@ -2121,6 +2822,7 @@ let ProductService = class ProductService {
             tenSanPham: product.tenSanPham,
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
+            logo_product: product.logo_product,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -2145,7 +2847,28 @@ exports.ProductService = ProductService = __decorate([
 
 
 /***/ }),
-/* 33 */
+/* 35 */
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("@nestjs/platform-express");
+
+/***/ }),
+/* 36 */
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("multer");
+
+/***/ }),
+/* 37 */
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("path");
+
+/***/ }),
+/* 38 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2161,8 +2884,8 @@ exports.RateModule = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(9);
 const rate_entity_1 = __webpack_require__(11);
-const rate_controller_1 = __webpack_require__(34);
-const rate_service_1 = __webpack_require__(35);
+const rate_controller_1 = __webpack_require__(39);
+const rate_service_1 = __webpack_require__(40);
 const product_entity_1 = __webpack_require__(12);
 const user_entity_1 = __webpack_require__(10);
 let RateModule = class RateModule {
@@ -2180,7 +2903,7 @@ exports.RateModule = RateModule = __decorate([
 
 
 /***/ }),
-/* 34 */
+/* 39 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2201,9 +2924,9 @@ var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RateController = void 0;
 const common_1 = __webpack_require__(6);
-const globalClass_1 = __webpack_require__(21);
-const gobalEnum_1 = __webpack_require__(22);
-const rate_service_1 = __webpack_require__(35);
+const globalClass_1 = __webpack_require__(19);
+const gobalEnum_1 = __webpack_require__(20);
+const rate_service_1 = __webpack_require__(40);
 const rate_entity_1 = __webpack_require__(11);
 let RateController = class RateController {
     constructor(rateService) {
@@ -2251,7 +2974,7 @@ exports.RateController = RateController = __decorate([
 
 
 /***/ }),
-/* 35 */
+/* 40 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2314,7 +3037,7 @@ exports.RateService = RateService = __decorate([
 
 
 /***/ }),
-/* 36 */
+/* 41 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2329,9 +3052,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProductToppingModule = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(9);
-const product_topping_entity_1 = __webpack_require__(15);
-const product_topping_service_1 = __webpack_require__(37);
-const product_topping_controller_1 = __webpack_require__(38);
+const product_topping_entity_1 = __webpack_require__(27);
+const product_topping_service_1 = __webpack_require__(42);
+const product_topping_controller_1 = __webpack_require__(43);
 let ProductToppingModule = class ProductToppingModule {
 };
 exports.ProductToppingModule = ProductToppingModule;
@@ -2347,7 +3070,7 @@ exports.ProductToppingModule = ProductToppingModule = __decorate([
 
 
 /***/ }),
-/* 37 */
+/* 42 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2370,10 +3093,14 @@ exports.ProductToppingService = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(9);
 const typeorm_2 = __webpack_require__(14);
-const product_topping_entity_1 = __webpack_require__(15);
+const product_topping_entity_1 = __webpack_require__(27);
 let ProductToppingService = class ProductToppingService {
     constructor(productToppingRepository) {
         this.productToppingRepository = productToppingRepository;
+    }
+    async save(productTopping) {
+        const saveProductTopping = await this.productToppingRepository.save(productTopping);
+        return saveProductTopping;
     }
 };
 exports.ProductToppingService = ProductToppingService;
@@ -2385,7 +3112,7 @@ exports.ProductToppingService = ProductToppingService = __decorate([
 
 
 /***/ }),
-/* 38 */
+/* 43 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2399,25 +3126,49 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProductToppingController = void 0;
 const common_1 = __webpack_require__(6);
-const product_topping_service_1 = __webpack_require__(37);
+const globalClass_1 = __webpack_require__(19);
+const gobalEnum_1 = __webpack_require__(20);
+const product_topping_service_1 = __webpack_require__(42);
+const product_topping_entity_1 = __webpack_require__(27);
 let ProductToppingController = class ProductToppingController {
     constructor(productToppingService) {
         this.productToppingService = productToppingService;
     }
+    async createDonHangTopping(product_topping) {
+        try {
+            console.log(product_topping);
+            const saveProductTopping = await this.productToppingService.save(product_topping);
+            return new globalClass_1.ResponseData(saveProductTopping, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            console.log(error);
+            return new globalClass_1.ResponseData(null, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
 };
 exports.ProductToppingController = ProductToppingController;
+__decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_b = typeof product_topping_entity_1.ProductToppingEntity !== "undefined" && product_topping_entity_1.ProductToppingEntity) === "function" ? _b : Object]),
+    __metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
+], ProductToppingController.prototype, "createDonHangTopping", null);
 exports.ProductToppingController = ProductToppingController = __decorate([
-    (0, common_1.Controller)('rate'),
+    (0, common_1.Controller)('product-topping'),
     __metadata("design:paramtypes", [typeof (_a = typeof product_topping_service_1.ProductToppingService !== "undefined" && product_topping_service_1.ProductToppingService) === "function" ? _a : Object])
 ], ProductToppingController);
 
 
 /***/ }),
-/* 39 */
+/* 44 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2433,8 +3184,8 @@ exports.KhuyenMaiModule = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(9);
 const khuyenmai_entity_1 = __webpack_require__(13);
-const khuyenmai_service_1 = __webpack_require__(40);
-const khuyenmai_controller_1 = __webpack_require__(41);
+const khuyenmai_service_1 = __webpack_require__(45);
+const khuyenmai_controller_1 = __webpack_require__(46);
 let KhuyenMaiModule = class KhuyenMaiModule {
 };
 exports.KhuyenMaiModule = KhuyenMaiModule;
@@ -2450,7 +3201,7 @@ exports.KhuyenMaiModule = KhuyenMaiModule = __decorate([
 
 
 /***/ }),
-/* 40 */
+/* 45 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2486,6 +3237,38 @@ let KhuyenMaiService = class KhuyenMaiService {
         const saveKhuyenMai = await this.khuyenMaiRepository.save(khuyenMai);
         return saveKhuyenMai;
     }
+    async deleteKhuyenMai(id_khuyen_mai) {
+        try {
+            const khuyenMai = await this.khuyenMaiRepository.findOne({
+                where: {
+                    id_khuyen_mai: id_khuyen_mai,
+                },
+            });
+            await this.khuyenMaiRepository.remove(khuyenMai);
+            return true;
+        }
+        catch (error) {
+            console.error("Lỗi khi xóa khuyến mại", error);
+            return false;
+        }
+    }
+    async updateKhuyenMai(id_khuyen_mai, update_khuyen_mai) {
+        try {
+            const khuyenMai = await this.khuyenMaiRepository.findOne({
+                where: {
+                    id_khuyen_mai: id_khuyen_mai,
+                },
+            });
+            khuyenMai.phanTramKhuyenMai = update_khuyen_mai.phanTramKhuyenMai;
+            khuyenMai.donHangToiThieu = update_khuyen_mai.donHangToiThieu;
+            await this.khuyenMaiRepository.save(khuyenMai);
+            return khuyenMai;
+        }
+        catch (error) {
+            console.error('Lỗi khi sửa khuyến mại:', error);
+            return;
+        }
+    }
 };
 exports.KhuyenMaiService = KhuyenMaiService;
 exports.KhuyenMaiService = KhuyenMaiService = __decorate([
@@ -2496,7 +3279,7 @@ exports.KhuyenMaiService = KhuyenMaiService = __decorate([
 
 
 /***/ }),
-/* 41 */
+/* 46 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2513,13 +3296,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b, _c, _d;
+var _a, _b, _c, _d, _e, _f, _g;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.KhuyenMaiController = void 0;
 const common_1 = __webpack_require__(6);
-const globalClass_1 = __webpack_require__(21);
-const gobalEnum_1 = __webpack_require__(22);
-const khuyenmai_service_1 = __webpack_require__(40);
+const globalClass_1 = __webpack_require__(19);
+const gobalEnum_1 = __webpack_require__(20);
+const khuyenmai_service_1 = __webpack_require__(45);
 const khuyenmai_entity_1 = __webpack_require__(13);
 let KhuyenMaiController = class KhuyenMaiController {
     constructor(KhuyenMaiService) {
@@ -2544,6 +3327,25 @@ let KhuyenMaiController = class KhuyenMaiController {
             return new globalClass_1.ResponseData([], gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
         }
     }
+    async xoaKhuyenMai(id_khuyen_mai) {
+        const result = await this.KhuyenMaiService.deleteKhuyenMai(id_khuyen_mai);
+        if (result) {
+            return new globalClass_1.ResponseData(result, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        else {
+            return new globalClass_1.ResponseData(result, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+    async updateKhuyenMai(id_khuyen_mai, update_khuyen_mai) {
+        try {
+            const khuyenMai = await this.KhuyenMaiService.updateKhuyenMai(id_khuyen_mai, update_khuyen_mai);
+            return new globalClass_1.ResponseData(khuyenMai, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            console.error('Error updating khuyến mại:', error);
+            return new globalClass_1.ResponseData(null, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
 };
 exports.KhuyenMaiController = KhuyenMaiController;
 __decorate([
@@ -2559,10 +3361,554 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
 ], KhuyenMaiController.prototype, "getAllKhuyenMai", null);
+__decorate([
+    (0, common_1.Delete)("/delete-khuyen-mai/:id_khuyen_mai"),
+    __param(0, (0, common_1.Param)('id_khuyen_mai')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", typeof (_e = typeof Promise !== "undefined" && Promise) === "function" ? _e : Object)
+], KhuyenMaiController.prototype, "xoaKhuyenMai", null);
+__decorate([
+    (0, common_1.Put)('/update-khuyen-mai/:id_khuyen_mai'),
+    __param(0, (0, common_1.Param)('id_khuyen_mai')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, typeof (_f = typeof khuyenmai_entity_1.KhuyenMaiEntity !== "undefined" && khuyenmai_entity_1.KhuyenMaiEntity) === "function" ? _f : Object]),
+    __metadata("design:returntype", typeof (_g = typeof Promise !== "undefined" && Promise) === "function" ? _g : Object)
+], KhuyenMaiController.prototype, "updateKhuyenMai", null);
 exports.KhuyenMaiController = KhuyenMaiController = __decorate([
     (0, common_1.Controller)('khuyenmai'),
     __metadata("design:paramtypes", [typeof (_a = typeof khuyenmai_service_1.KhuyenMaiService !== "undefined" && khuyenmai_service_1.KhuyenMaiService) === "function" ? _a : Object])
 ], KhuyenMaiController);
+
+
+/***/ }),
+/* 47 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PhuongThucThanhToanModule = void 0;
+const common_1 = __webpack_require__(6);
+const typeorm_1 = __webpack_require__(9);
+const phuongthucthanhtoan_entity_1 = __webpack_require__(29);
+const phuongthucthanhtoan_controller_1 = __webpack_require__(48);
+const phuongthucthanhtoan_service_1 = __webpack_require__(49);
+let PhuongThucThanhToanModule = class PhuongThucThanhToanModule {
+};
+exports.PhuongThucThanhToanModule = PhuongThucThanhToanModule;
+exports.PhuongThucThanhToanModule = PhuongThucThanhToanModule = __decorate([
+    (0, common_1.Module)({
+        imports: [
+            typeorm_1.TypeOrmModule.forFeature([phuongthucthanhtoan_entity_1.PhuongThucThanhToanEntity])
+        ],
+        controllers: [phuongthucthanhtoan_controller_1.PhuongThucThanhToanController],
+        providers: [phuongthucthanhtoan_service_1.PhuongThucThanhToanService]
+    })
+], PhuongThucThanhToanModule);
+
+
+/***/ }),
+/* 48 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PhuongThucThanhToanController = void 0;
+const common_1 = __webpack_require__(6);
+const globalClass_1 = __webpack_require__(19);
+const gobalEnum_1 = __webpack_require__(20);
+const phuongthucthanhtoan_service_1 = __webpack_require__(49);
+let PhuongThucThanhToanController = class PhuongThucThanhToanController {
+    constructor(PhuongThucThanhToanService) {
+        this.PhuongThucThanhToanService = PhuongThucThanhToanService;
+    }
+    async getAllPhuongThuc() {
+        try {
+            const a = await this.PhuongThucThanhToanService.getAllPhuongThuc();
+            return new globalClass_1.ResponseData(a, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            return new globalClass_1.ResponseData([], gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+};
+exports.PhuongThucThanhToanController = PhuongThucThanhToanController;
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", typeof (_b = typeof Promise !== "undefined" && Promise) === "function" ? _b : Object)
+], PhuongThucThanhToanController.prototype, "getAllPhuongThuc", null);
+exports.PhuongThucThanhToanController = PhuongThucThanhToanController = __decorate([
+    (0, common_1.Controller)('phuongthucthanhtoan'),
+    __metadata("design:paramtypes", [typeof (_a = typeof phuongthucthanhtoan_service_1.PhuongThucThanhToanService !== "undefined" && phuongthucthanhtoan_service_1.PhuongThucThanhToanService) === "function" ? _a : Object])
+], PhuongThucThanhToanController);
+
+
+/***/ }),
+/* 49 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PhuongThucThanhToanService = void 0;
+const common_1 = __webpack_require__(6);
+const typeorm_1 = __webpack_require__(9);
+const typeorm_2 = __webpack_require__(14);
+const phuongthucthanhtoan_entity_1 = __webpack_require__(29);
+let PhuongThucThanhToanService = class PhuongThucThanhToanService {
+    constructor(phuongThucThanhToanRepository) {
+        this.phuongThucThanhToanRepository = phuongThucThanhToanRepository;
+    }
+    async getAllPhuongThuc() {
+        const phuongThuc = await this.phuongThucThanhToanRepository.find();
+        return phuongThuc;
+    }
+};
+exports.PhuongThucThanhToanService = PhuongThucThanhToanService;
+exports.PhuongThucThanhToanService = PhuongThucThanhToanService = __decorate([
+    (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_1.InjectRepository)(phuongthucthanhtoan_entity_1.PhuongThucThanhToanEntity)),
+    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object])
+], PhuongThucThanhToanService);
+
+
+/***/ }),
+/* 50 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DonHangModule = void 0;
+const common_1 = __webpack_require__(6);
+const typeorm_1 = __webpack_require__(9);
+const donhang_entity_1 = __webpack_require__(28);
+const donhang_controller_1 = __webpack_require__(51);
+const donhang_service_1 = __webpack_require__(52);
+let DonHangModule = class DonHangModule {
+};
+exports.DonHangModule = DonHangModule;
+exports.DonHangModule = DonHangModule = __decorate([
+    (0, common_1.Module)({
+        imports: [
+            typeorm_1.TypeOrmModule.forFeature([donhang_entity_1.DonHangEntity])
+        ],
+        controllers: [donhang_controller_1.DonHangController],
+        providers: [donhang_service_1.DonHangService]
+    })
+], DonHangModule);
+
+
+/***/ }),
+/* 51 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a, _b, _c, _d, _e, _f, _g, _h;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DonHangController = void 0;
+const common_1 = __webpack_require__(6);
+const globalClass_1 = __webpack_require__(19);
+const gobalEnum_1 = __webpack_require__(20);
+const donhang_service_1 = __webpack_require__(52);
+const donhang_entity_1 = __webpack_require__(28);
+let DonHangController = class DonHangController {
+    constructor(DonHangService) {
+        this.DonHangService = DonHangService;
+    }
+    async createDonHang(donHang) {
+        try {
+            console.log(donHang);
+            const saveDonHang = await this.DonHangService.save(donHang);
+            return new globalClass_1.ResponseData(saveDonHang, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            console.log(error);
+            return new globalClass_1.ResponseData(null, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+    async getAllDonHang() {
+        try {
+            const donHang = await this.DonHangService.getDonHang();
+            return new globalClass_1.ResponseData(donHang, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            return new globalClass_1.ResponseData([], gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+    async getDonHangById(id_donHang) {
+        try {
+            const donHang = await this.DonHangService.getDonHangById(id_donHang);
+            return new globalClass_1.ResponseData(donHang, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            return new globalClass_1.ResponseData(null, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+    async suaTheLoai(id_donHang, update_donHang) {
+        try {
+            const donHang = await this.DonHangService.updateDonHang(id_donHang, update_donHang);
+            return new globalClass_1.ResponseData(donHang, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            console.error('Error updating donHang:', error);
+            return new globalClass_1.ResponseData(null, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+    async getDonHangByIdUser(id_user) {
+        try {
+            const listDh = await this.DonHangService.getDonHangByUserId(id_user);
+            return new globalClass_1.ResponseData(listDh, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            return new globalClass_1.ResponseData(null, gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+};
+exports.DonHangController = DonHangController;
+__decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_b = typeof donhang_entity_1.DonHangEntity !== "undefined" && donhang_entity_1.DonHangEntity) === "function" ? _b : Object]),
+    __metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
+], DonHangController.prototype, "createDonHang", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
+], DonHangController.prototype, "getAllDonHang", null);
+__decorate([
+    (0, common_1.Get)('/:id_donHang'),
+    __param(0, (0, common_1.Param)('id_donHang')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", typeof (_e = typeof Promise !== "undefined" && Promise) === "function" ? _e : Object)
+], DonHangController.prototype, "getDonHangById", null);
+__decorate([
+    (0, common_1.Put)('/sua-don-hang/:id_donHang'),
+    __param(0, (0, common_1.Param)('id_donHang')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, typeof (_f = typeof donhang_entity_1.DonHangEntity !== "undefined" && donhang_entity_1.DonHangEntity) === "function" ? _f : Object]),
+    __metadata("design:returntype", typeof (_g = typeof Promise !== "undefined" && Promise) === "function" ? _g : Object)
+], DonHangController.prototype, "suaTheLoai", null);
+__decorate([
+    (0, common_1.Get)('/get-by-user/:id_user'),
+    __param(0, (0, common_1.Param)('id_user')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", typeof (_h = typeof Promise !== "undefined" && Promise) === "function" ? _h : Object)
+], DonHangController.prototype, "getDonHangByIdUser", null);
+exports.DonHangController = DonHangController = __decorate([
+    (0, common_1.Controller)('donhang'),
+    __metadata("design:paramtypes", [typeof (_a = typeof donhang_service_1.DonHangService !== "undefined" && donhang_service_1.DonHangService) === "function" ? _a : Object])
+], DonHangController);
+
+
+/***/ }),
+/* 52 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DonHangService = void 0;
+const common_1 = __webpack_require__(6);
+const typeorm_1 = __webpack_require__(9);
+const typeorm_2 = __webpack_require__(14);
+const donhang_entity_1 = __webpack_require__(28);
+let DonHangService = class DonHangService {
+    constructor(donHangRepository) {
+        this.donHangRepository = donHangRepository;
+    }
+    async save(donHang) {
+        const saveDonHang = await this.donHangRepository.save(donHang);
+        return saveDonHang;
+    }
+    async getDonHang() {
+        const donHang = await this.donHangRepository.find();
+        return donHang;
+    }
+    async getDonHangById(id_donHang) {
+        const donHang = await this.donHangRepository.findOne({
+            where: {
+                id_donHang: id_donHang
+            }
+        });
+        return donHang;
+    }
+    async updateDonHang(id_donHang, update_donHang) {
+        try {
+            const donHang = await this.donHangRepository.findOne({
+                where: {
+                    id_donHang: id_donHang,
+                },
+            });
+            donHang.soLuong = update_donHang.soLuong;
+            donHang.id_phuong_thuc_thanh_toan = update_donHang.id_phuong_thuc_thanh_toan;
+            donHang.status = update_donHang.status;
+            donHang.giaDonHang = update_donHang.giaDonHang;
+            donHang.diaChi = update_donHang.diaChi;
+            await this.donHangRepository.save(donHang);
+            return donHang;
+        }
+        catch (error) {
+            console.error('Lỗi khi sửa đơn hàng:', error);
+            return null;
+        }
+    }
+    async getDonHangByUserId(id_user) {
+        const donHangs = await this.donHangRepository.find({
+            where: {
+                id_user: id_user
+            }
+        });
+        return donHangs;
+    }
+};
+exports.DonHangService = DonHangService;
+exports.DonHangService = DonHangService = __decorate([
+    (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_1.InjectRepository)(donhang_entity_1.DonHangEntity)),
+    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object])
+], DonHangService);
+
+
+/***/ }),
+/* 53 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DiaChiEntity = void 0;
+const user_entity_1 = __webpack_require__(10);
+const typeorm_1 = __webpack_require__(14);
+let DiaChiEntity = class DiaChiEntity extends typeorm_1.BaseEntity {
+};
+exports.DiaChiEntity = DiaChiEntity;
+__decorate([
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
+], DiaChiEntity.prototype, "id_dia_chi", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], DiaChiEntity.prototype, "dia_chi", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], DiaChiEntity.prototype, "id_user", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.UserEntity),
+    (0, typeorm_1.JoinColumn)({ name: 'id_user' }),
+    __metadata("design:type", typeof (_a = typeof user_entity_1.UserEntity !== "undefined" && user_entity_1.UserEntity) === "function" ? _a : Object)
+], DiaChiEntity.prototype, "user", void 0);
+exports.DiaChiEntity = DiaChiEntity = __decorate([
+    (0, typeorm_1.Entity)("diachi")
+], DiaChiEntity);
+
+
+/***/ }),
+/* 54 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DiaChiModule = void 0;
+const common_1 = __webpack_require__(6);
+const typeorm_1 = __webpack_require__(9);
+const diachi_entity_1 = __webpack_require__(53);
+const diachi_service_1 = __webpack_require__(55);
+const diachi_controller_1 = __webpack_require__(56);
+let DiaChiModule = class DiaChiModule {
+};
+exports.DiaChiModule = DiaChiModule;
+exports.DiaChiModule = DiaChiModule = __decorate([
+    (0, common_1.Module)({
+        imports: [
+            typeorm_1.TypeOrmModule.forFeature([diachi_entity_1.DiaChiEntity])
+        ],
+        controllers: [diachi_controller_1.DiaChiController],
+        providers: [diachi_service_1.DiaChiService]
+    })
+], DiaChiModule);
+
+
+/***/ }),
+/* 55 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DiaChiService = void 0;
+const common_1 = __webpack_require__(6);
+const typeorm_1 = __webpack_require__(9);
+const typeorm_2 = __webpack_require__(14);
+const diachi_entity_1 = __webpack_require__(53);
+let DiaChiService = class DiaChiService {
+    constructor(diaChiRepository) {
+        this.diaChiRepository = diaChiRepository;
+    }
+    async getAllDiaChi() {
+        const diachi = await this.diaChiRepository.find();
+        return diachi;
+    }
+};
+exports.DiaChiService = DiaChiService;
+exports.DiaChiService = DiaChiService = __decorate([
+    (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_1.InjectRepository)(diachi_entity_1.DiaChiEntity)),
+    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object])
+], DiaChiService);
+
+
+/***/ }),
+/* 56 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DiaChiController = void 0;
+const common_1 = __webpack_require__(6);
+const globalClass_1 = __webpack_require__(19);
+const gobalEnum_1 = __webpack_require__(20);
+const diachi_service_1 = __webpack_require__(55);
+let DiaChiController = class DiaChiController {
+    constructor(DiaChiService) {
+        this.DiaChiService = DiaChiService;
+    }
+    async getAllDiaChi() {
+        try {
+            const a = await this.DiaChiService.getAllDiaChi();
+            return new globalClass_1.ResponseData(a, gobalEnum_1.HttpStatus.SUCCESS, gobalEnum_1.HttpMessage.SUCCESS);
+        }
+        catch (error) {
+            return new globalClass_1.ResponseData([], gobalEnum_1.HttpStatus.ERROR, gobalEnum_1.HttpMessage.ERROR);
+        }
+    }
+};
+exports.DiaChiController = DiaChiController;
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", typeof (_b = typeof Promise !== "undefined" && Promise) === "function" ? _b : Object)
+], DiaChiController.prototype, "getAllDiaChi", null);
+exports.DiaChiController = DiaChiController = __decorate([
+    (0, common_1.Controller)('diachi'),
+    __metadata("design:paramtypes", [typeof (_a = typeof diachi_service_1.DiaChiService !== "undefined" && diachi_service_1.DiaChiService) === "function" ? _a : Object])
+], DiaChiController);
 
 
 /***/ })
@@ -2627,7 +3973,7 @@ exports.KhuyenMaiController = KhuyenMaiController = __decorate([
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("1f3ef90ce67c59c13481")
+/******/ 		__webpack_require__.h = () => ("1c9516fa819e7407ccb5")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

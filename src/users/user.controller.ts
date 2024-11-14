@@ -67,5 +67,15 @@ export class UserController{
         }
     }
 
+    @Get('/:id_user')
+    async getDonHangByIdUser(@Param('id_user') id_user: number): Promise<ResponseData<UserEntity>>{
+        try {
+            const user = await this.userService.getUserById(id_user);
+            return new ResponseData<UserEntity>(user, HttpStatus.SUCCESS, HttpMessage.SUCCESS);
+        } catch (error) {
+            return new ResponseData<UserEntity>(null, HttpStatus.ERROR, HttpMessage.ERROR);
+        }
+    }
+
 
 }

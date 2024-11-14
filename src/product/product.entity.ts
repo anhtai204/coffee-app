@@ -21,6 +21,12 @@ export class ProductEntity extends BaseEntity {
     @Column()
     khuyenmai_gia: number;
 
+    @Column()
+    logo_product: string;
+
+    @Column()
+    mo_ta: string;
+
 
     @ManyToOne(() => TheLoaiEntity, theLoai => theLoai.products, { eager: true }) // Chỉnh sửa
     @JoinColumn({ name: 'id_theLoai' }) // Khóa ngoại
@@ -31,8 +37,8 @@ export class ProductEntity extends BaseEntity {
     khuyenMai: KhuyenMaiEntity;
 
 
-    @OneToMany(() => ProductToppingEntity, (productTopping) => productTopping.product)
-    productToppings: ProductToppingEntity[];
+    // @OneToMany(() => ProductToppingEntity, (productTopping) => productTopping.product)
+    // productToppings: ProductToppingEntity[];
 
     @OneToMany(() => RateEntity, rate => rate.product)
     rates: RateEntity[];

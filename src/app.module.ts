@@ -18,6 +18,14 @@ import { RateModule } from './rate/rate.module';
 import { ProductToppingModule } from './product_topping/product_topping.module';
 import { KhuyenMaiModule } from './khuyenmai/khuyenmai.module';
 import { KhuyenMaiEntity } from './khuyenmai/khuyenmai.entity';
+import { PhuongThucThanhToanEntity } from './phuongthucthanhtoan/phuongthucthanhtoan.entity';
+import { DonHangEntity } from './donhang/donhang.entity';
+import { PhuongThucThanhToanModule } from './phuongthucthanhtoan/phuongthucthanhtoan.module';
+import { DonHangModule } from './donhang/donhang.module';
+import { DiaChiEntity } from './diachi/diachi.entity';
+import { DiaChiModule } from './diachi/diachi.module';
+// import { TuyChinhEntity } from './tuychinh/tuychinh.entity';
+// import { TuyChinhModule } from './tuychinh/tuychinh.module';
 
 @Module({
   imports: [
@@ -29,7 +37,8 @@ import { KhuyenMaiEntity } from './khuyenmai/khuyenmai.entity';
         username: 'root',
         password: '22042004',
         database: 'coffee_app',
-        entities: [UserEntity, TheLoaiEntity, ToppingEntity, KhuyenMaiEntity, ProductEntity, ProductToppingEntity, RateEntity],
+        entities: [UserEntity, TheLoaiEntity, ToppingEntity, KhuyenMaiEntity, ProductEntity, ProductToppingEntity, 
+          RateEntity, PhuongThucThanhToanEntity, DonHangEntity, DiaChiEntity],
         synchronize: false,
       }), 
       HttpModule,
@@ -40,6 +49,9 @@ import { KhuyenMaiEntity } from './khuyenmai/khuyenmai.entity';
       ProductModule,
       ProductToppingModule,
       RateModule,
+      PhuongThucThanhToanModule,
+      DonHangModule,
+      DiaChiModule
   ],
   controllers: [AppController],
   providers: [AppService],

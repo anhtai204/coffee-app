@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 
-export class PhuongThucThanhToanDto {
+export class KhuyenMaiDto {
     @Expose()
     id_khuyen_mai?: number;
 

@@ -61,7 +61,16 @@ export class UserService {
     //         return null;
     //     }
     // }
-    
+
+
+    async getUserById(id_user: number): Promise<UserEntity>{
+        const user = await this.userRepository.findOne({
+            where: {
+                id_user: id_user
+            }
+        });
+        return user;
+    }
 
     
 }

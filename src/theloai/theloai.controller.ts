@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Res } from "@nestjs/common";
 import { TheLoaiService } from "./theloai.service";
 import { TheLoaiEntity } from "./theloai.entity";
 import { ResponseData } from "src/global/globalClass";
@@ -26,6 +26,29 @@ export class TheLoaiController{
             return new ResponseData<TheLoaiEntity[]>(theLoai, HttpStatus.SUCCESS, HttpMessage.SUCCESS);
         } catch (error) {
             return new ResponseData<TheLoaiEntity[]>([], HttpStatus.ERROR, HttpMessage.ERROR);
+        }
+    }
+
+
+    @Delete("/xoa-the-loai/:id_theLoai")
+    async xoaTheLoaiById(@Param('id_theLoai') id_theLoai:number): Promise<ResponseData<Boolean>>{
+        const result = await this.TheLoaiService.deleteTheLoai(id_theLoai);
+
+        if (result) {
+            return new ResponseData<Boolean>(result, HttpStatus.SUCCESS, HttpMessage.SUCCESS);
+        } else {
+            return new ResponseData<Boolean>(result, HttpStatus.ERROR, HttpMessage.ERROR);
+        }
+    }
+
+    @Put('/sua-the-loai/:id_theLoai')
+    async suaTheLoai(@Param('id_theLoai') id_theLoai:number, @Body('new_tenTheLoai') new_tenTheLoai: string): Promise<ResponseData<Boolean>> {
+        try {
+            const check = await this.TheLoaiService.updateTheLoai(id_theLoai, new_tenTheLoai);
+            return new ResponseData<Boolean>(check, HttpStatus.SUCCESS, HttpMessage.SUCCESS);
+        } catch (error) {
+            console.error('Error updating theloai:', error);
+            return new ResponseData<Boolean>(false, HttpStatus.ERROR, HttpMessage.ERROR);
         }
     }
 

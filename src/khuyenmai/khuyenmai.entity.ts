@@ -8,7 +8,7 @@ export class KhuyenMaiEntity extends BaseEntity {
     @PrimaryGeneratedColumn()
     id_khuyen_mai: number;
 
-    @Column()
+    @Column({ type: 'float' })
     phanTramKhuyenMai: number;
 
     @Column()
