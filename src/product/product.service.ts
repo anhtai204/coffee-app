@@ -103,6 +103,7 @@ export class ProductService {
                 'theLoai.id_theLoai AS theLoai_id_theLoai',
                 'theLoai.ten_the_loai AS theLoai_ten_the_loai',
                 'product.logo_product AS logo_product',
+                'product.mo_ta AS mo_ta',
                 'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
                 'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
                 'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
@@ -124,6 +125,7 @@ export class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -157,6 +159,7 @@ export class ProductService {
                 'theLoai.id_theLoai AS theLoaiId',
                 'theLoai.ten_the_loai AS ten_the_loai',
                 'p.logo_product AS logo_product',
+                'p.mo_ta AS mo_ta',
                 'khuyenMai.id_khuyen_mai AS khuyenMaiId',
                 'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
                 'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -174,6 +177,7 @@ export class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -204,15 +208,16 @@ export class ProductService {
                 'theLoai.id_theLoai AS theLoaiId',
                 'theLoai.ten_the_loai AS ten_the_loai',
                 'p.logo_product AS logo_product',
+                'p.mo_ta AS mo_ta',
                 'khuyenMai.id_khuyen_mai AS khuyenMaiId',
                 'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
                 'khuyenMai.donHangToiThieu AS donHangToiThieu',
-                'AVG(rate.soLuongSao) AS average_star' // Calculate average star
+                'AVG(rate.soLuongSao) AS average_star'
             ])
             .groupBy('p.id_product')
             .addGroupBy('theLoai.id_theLoai')
             .addGroupBy('khuyenMai.id_khuyen_mai')
-            .orderBy('p.khuyenmai_gia', 'DESC') // Sort by promotion price in descending order
+            .orderBy('p.khuyenmai_gia', 'DESC')
             .getRawMany();
     
         return products.map(product => ({
@@ -221,6 +226,7 @@ export class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -229,8 +235,8 @@ export class ProductService {
                 id_khuyen_mai: product.khuyenMaiId,
                 phanTramKhuyenMai: product.phanTramKhuyenMai,
                 donHangToiThieu: product.donHangToiThieu
-            } : null, // Ensure khuyenMai is null if there's no associated promotion
-            average_star: parseFloat(product.average_star) || 0 // Ensure average_star is a float
+            } : null,
+            average_star: parseFloat(product.average_star) || 0
         }));
     }
 
@@ -251,6 +257,7 @@ export class ProductService {
                 'theLoai.id_theLoai AS theLoai_id_theLoai',
                 'theLoai.ten_the_loai AS theLoai_ten_the_loai',
                 'product.logo_product AS logo_product',
+                'product.mo_ta AS mo_ta',
                 'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
                 'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
                 'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
@@ -275,6 +282,7 @@ export class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -306,6 +314,7 @@ export class ProductService {
                 'theLoai.id_theLoai AS theLoai_id_theLoai',
                 'theLoai.ten_the_loai AS theLoai_ten_the_loai',
                 'product.logo_product AS logo_product',
+                'product.mo_ta AS mo_ta',
                 'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
                 'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
                 'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
@@ -327,6 +336,7 @@ export class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -345,9 +355,9 @@ export class ProductService {
     async getCoffeeFilterGia(): Promise<any[]> {
         const products = await this.productRepository
             .createQueryBuilder('p')
-            .leftJoinAndSelect('p.theLoai', 'theLoai') // Join with the theLoai relation
-            .leftJoinAndSelect('p.khuyenMai', 'khuyenMai') // Join with the khuyenMai relation
-            .leftJoin('p.rates', 'rate') // Join with the rates
+            .leftJoinAndSelect('p.theLoai', 'theLoai')
+            .leftJoinAndSelect('p.khuyenMai', 'khuyenMai')
+            .leftJoin('p.rates', 'rate')
             .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'Cà Phê' })
             .select([
                 'p.id_product AS id_product',
@@ -357,10 +367,11 @@ export class ProductService {
                 'theLoai.id_theLoai AS theLoaiId',
                 'theLoai.ten_the_loai AS ten_the_loai',
                 'p.logo_product AS logo_product',
+                'p.mo_ta AS mo_ta',
                 'khuyenMai.id_khuyen_mai AS khuyenMaiId',
                 'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
                 'khuyenMai.donHangToiThieu AS donHangToiThieu',
-                'AVG(rate.soLuongSao) AS average_star' // Calculate average star
+                'AVG(rate.soLuongSao) AS average_star'
             ])
             .groupBy('p.id_product')
             .addGroupBy('theLoai.id_theLoai')
@@ -374,6 +385,7 @@ export class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -382,17 +394,17 @@ export class ProductService {
                 id_khuyen_mai: product.khuyenMaiId,
                 phanTramKhuyenMai: product.phanTramKhuyenMai,
                 donHangToiThieu: product.donHangToiThieu
-            } : null, // Ensure khuyenMai is null if there's no associated promotion
-            average_star: parseFloat(product.average_star) || 0 // Ensure average_star is a float
+            } : null,
+            average_star: parseFloat(product.average_star) || 0
         }));
     }
     
     async getCoffeeFilterKhuyenMai(): Promise<any[]> {
         const products = await this.productRepository
             .createQueryBuilder('p')
-            .leftJoinAndSelect('p.theLoai', 'theLoai') // Join with the theLoai relation
-            .leftJoinAndSelect('p.khuyenMai', 'khuyenMai') // Join with the khuyenMai relation
-            .leftJoin('p.rates', 'rate') // Join with the rates
+            .leftJoinAndSelect('p.theLoai', 'theLoai')
+            .leftJoinAndSelect('p.khuyenMai', 'khuyenMai')
+            .leftJoin('p.rates', 'rate')
             .where('theLoai.ten_the_loai = :tenTheLoai', { tenTheLoai: 'Cà Phê' })
             .select([
                 'p.id_product AS id_product',
@@ -402,15 +414,16 @@ export class ProductService {
                 'theLoai.id_theLoai AS theLoaiId',
                 'theLoai.ten_the_loai AS ten_the_loai',
                 'p.logo_product AS logo_product',
+                'p.mo_ta AS mo_ta',
                 'khuyenMai.id_khuyen_mai AS khuyenMaiId',
                 'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
                 'khuyenMai.donHangToiThieu AS donHangToiThieu',
-                'AVG(rate.soLuongSao) AS average_star' // Calculate average star
+                'AVG(rate.soLuongSao) AS average_star'
             ])
             .groupBy('p.id_product')
             .addGroupBy('theLoai.id_theLoai')
             .addGroupBy('khuyenMai.id_khuyen_mai')
-            .orderBy('p.khuyenmai_gia', 'DESC') // Ensure products are ordered by promotion price
+            .orderBy('p.khuyenmai_gia', 'DESC')
             .getRawMany();
     
         return products.map(product => ({
@@ -419,6 +432,7 @@ export class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -427,43 +441,11 @@ export class ProductService {
                 id_khuyen_mai: product.khuyenMaiId,
                 phanTramKhuyenMai: product.phanTramKhuyenMai,
                 donHangToiThieu: product.donHangToiThieu
-            } : null, // Ensure khuyenMai is null if there's no associated promotion
-            average_star: parseFloat(product.average_star) || 0 // Ensure average_star is a float
+            } : null,
+            average_star: parseFloat(product.average_star) || 0
         }));
     }
     
-
-    // async getCoffeeFilterRate(): Promise<any[]> { // Sử dụng any[] hoặc định nghĩa DTO
-    //     console.log("Fetching coffee products with average ratings...");
-    //     const products = await this.productRepository.createQueryBuilder('p')
-    //         .leftJoinAndSelect('p.rates', 'r') // Kết nối với bảng rate
-    //         .leftJoin('p.theLoai', 'tl') // Kết nối với bảng theloai
-    //         .leftJoin('p.khuyenMai', 'km') // Sử dụng tên đúng 'khuyenMai'
-    //         .where('tl.ten_the_loai = :tenTheLoai', { tenTheLoai: 'CaPhe' }) // Lọc theo ten_the_loai
-    //         .select([
-    //             'p.id_product AS id_product',
-    //             'tl.ten_the_loai AS ten_the_loai',
-    //             'p.tenSanPham AS tenSanPham',
-    //             'p.giaSanPham AS giaSanPham',
-    //             'p.khuyenmai_gia AS khuyenmai_gia',
-    //             'AVG(r.soLuongSao) AS average_rating',
-    //         ])
-    //         .groupBy('p.id_product')
-    //         .addGroupBy('tl.ten_the_loai')
-    //         .addGroupBy('p.tenSanPham')
-    //         .addGroupBy('p.giaSanPham')
-    //         .addGroupBy('p.khuyenmai_gia')
-    //         .orderBy('average_rating', 'DESC')
-    //         .getRawMany();
-
-    //     // Chuyển đổi average_rating từ string thành number
-    //     const formattedProducts = products.map(product => ({
-    //         ...product,
-    //         average_rating: parseFloat(product.average_rating)
-    //     }));
-
-    //     return formattedProducts;
-    // }
 
     async getCoffeeFilterRate(): Promise<any[]> {
         console.log("Fetching tra sua products with average ratings...");
@@ -481,6 +463,7 @@ export class ProductService {
                 'product.khuyenmai_gia AS khuyenmai_gia',
                 'theLoai.id_theLoai AS theLoai_id_theLoai',
                 'theLoai.ten_the_loai AS theLoai_ten_the_loai',
+                'product.mo_ta AS mo_ta',
                 'product.logo_product AS logo_product',
                 'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
                 'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
@@ -504,6 +487,7 @@ export class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -522,17 +506,6 @@ export class ProductService {
 
 
     // tra sua
-    // async getProductTraSua(): Promise<ProductEntity[]> {
-    //     const products = await this.productRepository.find({
-    //         relations: ["theLoai"],
-    //         where: {
-    //             theLoai: {
-    //                 ten_the_loai: "TraSua"
-    //             }
-    //         }
-    //     });
-    //     return products;
-    // }
 
     async getProductTraSua(): Promise<any[]> {
         const products = await this.productRepository
@@ -548,6 +521,7 @@ export class ProductService {
                 'theLoai.id_theLoai AS theLoai_id_theLoai',
                 'theLoai.ten_the_loai AS theLoai_ten_the_loai',
                 'product.logo_product AS logo_product',
+                'product.mo_ta AS mo_ta',
                 'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
                 'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
                 'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
@@ -569,6 +543,7 @@ export class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -585,21 +560,6 @@ export class ProductService {
     }
 
 
-    // async getTraSuaFilterGia(): Promise<ProductEntity[]> {
-    //     const products = await this.productRepository.find({
-    //         relations: ["theLoai"],
-    //         where: {
-    //             theLoai: {
-    //                 ten_the_loai: "TraSua"
-    //             }
-    //         },
-    //         order: {
-    //             giaSanPham: 'ASC' 
-    //         }
-    //     });
-    //     return products;
-    // }
-
     async getTraSuaFilterGia(): Promise<any[]> {
         const products = await this.productRepository
             .createQueryBuilder('p')
@@ -615,6 +575,7 @@ export class ProductService {
                 'theLoai.id_theLoai AS theLoaiId',
                 'theLoai.ten_the_loai AS ten_the_loai',
                 'p.logo_product AS logo_product',
+                'p.mo_ta AS mo_ta',
                 'khuyenMai.id_khuyen_mai AS khuyenMaiId',
                 'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
                 'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -632,6 +593,7 @@ export class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -646,22 +608,6 @@ export class ProductService {
     }
 
 
-
-
-    // async getTraSuaFilterKhuyenMai(): Promise<ProductEntity[]> {
-    //     const products = await this.productRepository.find({
-    //         relations: ["theLoai"],
-    //         where: {
-    //             theLoai: {
-    //                 ten_the_loai: "TraSua"
-    //             }
-    //         },
-    //         order: {
-    //             khuyenmai_gia: 'DESC' 
-    //         }
-    //     });
-    //     return products;
-    // }
 
     async getTraSuaFilterKhuyenMai(): Promise<any[]> {
         const products = await this.productRepository
@@ -678,6 +624,7 @@ export class ProductService {
                 'theLoai.id_theLoai AS theLoaiId',
                 'theLoai.ten_the_loai AS ten_the_loai',
                 'p.logo_product AS logo_product',
+                'p.mo_ta AS mo_ta',
                 'khuyenMai.id_khuyen_mai AS khuyenMaiId',
                 'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
                 'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -695,6 +642,7 @@ export class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -708,38 +656,6 @@ export class ProductService {
         }));
     }
 
-
-    // async getTraSuaFilterRate(): Promise<any[]> { // Sử dụng any[] hoặc định nghĩa DTO
-    //     console.log("Fetching coffee products with average ratings...");
-    //     const products = await this.productRepository.createQueryBuilder('p')
-    //         .leftJoinAndSelect('p.rates', 'r') // Kết nối với bảng rate
-    //         .leftJoin('p.theLoai', 'tl') // Kết nối với bảng theloai
-    //         .leftJoin('p.khuyenMai', 'km') // Sử dụng tên đúng 'khuyenMai'
-    //         .where('tl.ten_the_loai = :tenTheLoai', { tenTheLoai: 'TraSua' }) // Lọc theo ten_the_loai
-    //         .select([
-    //             'p.id_product AS id_product',
-    //             'tl.ten_the_loai AS ten_the_loai',
-    //             'p.tenSanPham AS tenSanPham',
-    //             'p.giaSanPham AS giaSanPham',
-    //             'p.khuyenmai_gia AS khuyenmai_gia',
-    //             'AVG(r.soLuongSao) AS average_rating',
-    //         ])
-    //         .groupBy('p.id_product')
-    //         .addGroupBy('tl.ten_the_loai')
-    //         .addGroupBy('p.tenSanPham')
-    //         .addGroupBy('p.giaSanPham')
-    //         .addGroupBy('p.khuyenmai_gia')
-    //         .orderBy('average_rating', 'DESC')
-    //         .getRawMany();
-
-    //     // Chuyển đổi average_rating từ string thành number
-    //     const formattedProducts = products.map(product => ({
-    //         ...product,
-    //         average_rating: parseFloat(product.average_rating)
-    //     }));
-
-    //     return formattedProducts;
-    // }
 
     async getTraSuaFilterRate(): Promise<any[]> {
         console.log("Fetching coffee products with average ratings...");
@@ -758,6 +674,7 @@ export class ProductService {
                 'theLoai.id_theLoai AS theLoai_id_theLoai',
                 'theLoai.ten_the_loai AS theLoai_ten_the_loai',
                 'product.logo_product AS logo_product',
+                'product.mo_ta AS mo_ta',
                 'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
                 'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
                 'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
@@ -780,6 +697,7 @@ export class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -798,19 +716,6 @@ export class ProductService {
     
     // sinh to
 
-    // async getProductSinhTo(): Promise<ProductEntity[]> {
-    //     const products = await this.productRepository.find({
-    //         relations: ["theLoai"],
-    //         where: {
-    //             theLoai: {
-    //                 ten_the_loai: "SinhTo"
-    //             }
-    //         }
-    //     });
-    //     return products;
-    // }
-
-
     async getProductSinhTo(): Promise<any[]> {
         const products = await this.productRepository
             .createQueryBuilder('product')
@@ -825,6 +730,7 @@ export class ProductService {
                 'theLoai.id_theLoai AS theLoai_id_theLoai',
                 'theLoai.ten_the_loai AS theLoai_ten_the_loai',
                 'product.logo_product AS logo_product',
+                'product.mo_ta AS mo_ta',
                 'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
                 'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
                 'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
@@ -846,6 +752,7 @@ export class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -860,22 +767,6 @@ export class ProductService {
 
         return productsWithAverageStar;
     }
-
-
-    // async getSinhToFilterGia(): Promise<ProductEntity[]> {
-    //     const products = await this.productRepository.find({
-    //         relations: ["theLoai"],
-    //         where: {
-    //             theLoai: {
-    //                 ten_the_loai: "SinhTo"
-    //             }
-    //         },
-    //         order: {
-    //             giaSanPham: 'ASC' 
-    //         }
-    //     });
-    //     return products;
-    // }
 
 
     async getSinhToFilterGia(): Promise<any[]> {
@@ -893,6 +784,7 @@ export class ProductService {
                 'theLoai.id_theLoai AS theLoaiId',
                 'theLoai.ten_the_loai AS ten_the_loai',
                 'p.logo_product AS logo_product',
+                'p.mo_ta AS mo_ta',
                 'khuyenMai.id_khuyen_mai AS khuyenMaiId',
                 'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
                 'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -910,6 +802,7 @@ export class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -922,23 +815,6 @@ export class ProductService {
             average_star: parseFloat(product.average_star) || 0 // Ensure average_star is a float
         }));
     }
-
-
-
-    // async getSinhToFilterKhuyenMai(): Promise<ProductEntity[]> {
-    //     const products = await this.productRepository.find({
-    //         relations: ["theLoai"],
-    //         where: {
-    //             theLoai: {
-    //                 ten_the_loai: "SinhTo"
-    //             }
-    //         },
-    //         order: {
-    //             khuyenmai_gia: 'DESC' 
-    //         }
-    //     });
-    //     return products;
-    // }
 
 
     async getSinhToFilterKhuyenMai(): Promise<any[]> {
@@ -956,6 +832,7 @@ export class ProductService {
                 'theLoai.id_theLoai AS theLoaiId',
                 'theLoai.ten_the_loai AS ten_the_loai',
                 'p.logo_product AS logo_product',
+                'p.mo_ta AS mo_ta',
                 'khuyenMai.id_khuyen_mai AS khuyenMaiId',
                 'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
                 'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -973,6 +850,7 @@ export class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -986,38 +864,6 @@ export class ProductService {
         }));
     }
 
-
-    // async getSinhToFilterRate(): Promise<any[]> { // Sử dụng any[] hoặc định nghĩa DTO
-    //     console.log("Fetching coffee products with average ratings...");
-    //     const products = await this.productRepository.createQueryBuilder('p')
-    //         .leftJoinAndSelect('p.rates', 'r') // Kết nối với bảng rate
-    //         .leftJoin('p.theLoai', 'tl') // Kết nối với bảng theloai
-    //         .leftJoin('p.khuyenMai', 'km') // Sử dụng tên đúng 'khuyenMai'
-    //         .where('tl.ten_the_loai = :tenTheLoai', { tenTheLoai: 'SinhTo' }) // Lọc theo ten_the_loai
-    //         .select([
-    //             'p.id_product AS id_product',
-    //             'tl.ten_the_loai AS ten_the_loai',
-    //             'p.tenSanPham AS tenSanPham',
-    //             'p.giaSanPham AS giaSanPham',
-    //             'p.khuyenmai_gia AS khuyenmai_gia',
-    //             'AVG(r.soLuongSao) AS average_rating',
-    //         ])
-    //         .groupBy('p.id_product')
-    //         .addGroupBy('tl.ten_the_loai')
-    //         .addGroupBy('p.tenSanPham')
-    //         .addGroupBy('p.giaSanPham')
-    //         .addGroupBy('p.khuyenmai_gia')
-    //         .orderBy('average_rating', 'DESC')
-    //         .getRawMany();
-
-    //     // Chuyển đổi average_rating từ string thành number
-    //     const formattedProducts = products.map(product => ({
-    //         ...product,
-    //         average_rating: parseFloat(product.average_rating)
-    //     }));
-
-    //     return formattedProducts;
-    // }
 
     async getSinhToFilterRate(): Promise<any[]> {
         console.log("Fetching coffee products with average ratings...");
@@ -1036,6 +882,7 @@ export class ProductService {
                 'theLoai.id_theLoai AS theLoai_id_theLoai',
                 'theLoai.ten_the_loai AS theLoai_ten_the_loai',
                 'product.logo_product AS logo_product',
+                'product.mo_ta AS mo_ta',
                 'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
                 'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
                 'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
@@ -1058,6 +905,7 @@ export class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,

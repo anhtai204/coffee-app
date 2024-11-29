@@ -2124,6 +2124,7 @@ let ProductService = class ProductService {
             'theLoai.id_theLoai AS theLoai_id_theLoai',
             'theLoai.ten_the_loai AS theLoai_ten_the_loai',
             'product.logo_product AS logo_product',
+            'product.mo_ta AS mo_ta',
             'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
             'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
@@ -2143,6 +2144,7 @@ let ProductService = class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -2173,6 +2175,7 @@ let ProductService = class ProductService {
             'theLoai.id_theLoai AS theLoaiId',
             'theLoai.ten_the_loai AS ten_the_loai',
             'p.logo_product AS logo_product',
+            'p.mo_ta AS mo_ta',
             'khuyenMai.id_khuyen_mai AS khuyenMaiId',
             'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -2189,6 +2192,7 @@ let ProductService = class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -2218,6 +2222,7 @@ let ProductService = class ProductService {
             'theLoai.id_theLoai AS theLoaiId',
             'theLoai.ten_the_loai AS ten_the_loai',
             'p.logo_product AS logo_product',
+            'p.mo_ta AS mo_ta',
             'khuyenMai.id_khuyen_mai AS khuyenMaiId',
             'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -2234,6 +2239,7 @@ let ProductService = class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -2261,6 +2267,7 @@ let ProductService = class ProductService {
             'theLoai.id_theLoai AS theLoai_id_theLoai',
             'theLoai.ten_the_loai AS theLoai_ten_the_loai',
             'product.logo_product AS logo_product',
+            'product.mo_ta AS mo_ta',
             'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
             'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
@@ -2283,6 +2290,7 @@ let ProductService = class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -2310,6 +2318,7 @@ let ProductService = class ProductService {
             'theLoai.id_theLoai AS theLoai_id_theLoai',
             'theLoai.ten_the_loai AS theLoai_ten_the_loai',
             'product.logo_product AS logo_product',
+            'product.mo_ta AS mo_ta',
             'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
             'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
@@ -2329,6 +2338,7 @@ let ProductService = class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -2357,6 +2367,7 @@ let ProductService = class ProductService {
             'theLoai.id_theLoai AS theLoaiId',
             'theLoai.ten_the_loai AS ten_the_loai',
             'p.logo_product AS logo_product',
+            'p.mo_ta AS mo_ta',
             'khuyenMai.id_khuyen_mai AS khuyenMaiId',
             'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -2373,6 +2384,7 @@ let ProductService = class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -2400,6 +2412,7 @@ let ProductService = class ProductService {
             'theLoai.id_theLoai AS theLoaiId',
             'theLoai.ten_the_loai AS ten_the_loai',
             'p.logo_product AS logo_product',
+            'p.mo_ta AS mo_ta',
             'khuyenMai.id_khuyen_mai AS khuyenMaiId',
             'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -2416,6 +2429,7 @@ let ProductService = class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -2442,6 +2456,7 @@ let ProductService = class ProductService {
             'product.khuyenmai_gia AS khuyenmai_gia',
             'theLoai.id_theLoai AS theLoai_id_theLoai',
             'theLoai.ten_the_loai AS theLoai_ten_the_loai',
+            'product.mo_ta AS mo_ta',
             'product.logo_product AS logo_product',
             'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
             'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
@@ -2463,6 +2478,7 @@ let ProductService = class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -2490,6 +2506,7 @@ let ProductService = class ProductService {
             'theLoai.id_theLoai AS theLoai_id_theLoai',
             'theLoai.ten_the_loai AS theLoai_ten_the_loai',
             'product.logo_product AS logo_product',
+            'product.mo_ta AS mo_ta',
             'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
             'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
@@ -2509,6 +2526,7 @@ let ProductService = class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -2537,6 +2555,7 @@ let ProductService = class ProductService {
             'theLoai.id_theLoai AS theLoaiId',
             'theLoai.ten_the_loai AS ten_the_loai',
             'p.logo_product AS logo_product',
+            'p.mo_ta AS mo_ta',
             'khuyenMai.id_khuyen_mai AS khuyenMaiId',
             'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -2553,6 +2572,7 @@ let ProductService = class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -2580,6 +2600,7 @@ let ProductService = class ProductService {
             'theLoai.id_theLoai AS theLoaiId',
             'theLoai.ten_the_loai AS ten_the_loai',
             'p.logo_product AS logo_product',
+            'p.mo_ta AS mo_ta',
             'khuyenMai.id_khuyen_mai AS khuyenMaiId',
             'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -2596,6 +2617,7 @@ let ProductService = class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -2623,6 +2645,7 @@ let ProductService = class ProductService {
             'theLoai.id_theLoai AS theLoai_id_theLoai',
             'theLoai.ten_the_loai AS theLoai_ten_the_loai',
             'product.logo_product AS logo_product',
+            'product.mo_ta AS mo_ta',
             'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
             'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
@@ -2643,6 +2666,7 @@ let ProductService = class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -2670,6 +2694,7 @@ let ProductService = class ProductService {
             'theLoai.id_theLoai AS theLoai_id_theLoai',
             'theLoai.ten_the_loai AS theLoai_ten_the_loai',
             'product.logo_product AS logo_product',
+            'product.mo_ta AS mo_ta',
             'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
             'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
@@ -2689,6 +2714,7 @@ let ProductService = class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -2717,6 +2743,7 @@ let ProductService = class ProductService {
             'theLoai.id_theLoai AS theLoaiId',
             'theLoai.ten_the_loai AS ten_the_loai',
             'p.logo_product AS logo_product',
+            'p.mo_ta AS mo_ta',
             'khuyenMai.id_khuyen_mai AS khuyenMaiId',
             'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -2733,6 +2760,7 @@ let ProductService = class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -2760,6 +2788,7 @@ let ProductService = class ProductService {
             'theLoai.id_theLoai AS theLoaiId',
             'theLoai.ten_the_loai AS ten_the_loai',
             'p.logo_product AS logo_product',
+            'p.mo_ta AS mo_ta',
             'khuyenMai.id_khuyen_mai AS khuyenMaiId',
             'khuyenMai.phanTramKhuyenMai AS phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS donHangToiThieu',
@@ -2776,6 +2805,7 @@ let ProductService = class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoaiId,
                 ten_the_loai: product.ten_the_loai
@@ -2803,6 +2833,7 @@ let ProductService = class ProductService {
             'theLoai.id_theLoai AS theLoai_id_theLoai',
             'theLoai.ten_the_loai AS theLoai_ten_the_loai',
             'product.logo_product AS logo_product',
+            'product.mo_ta AS mo_ta',
             'khuyenMai.id_khuyen_mai AS khuyenMai_id_khuyen_mai',
             'khuyenMai.phanTramKhuyenMai AS khuyenMai_phanTramKhuyenMai',
             'khuyenMai.donHangToiThieu AS khuyenMai_donHangToiThieu',
@@ -2823,6 +2854,7 @@ let ProductService = class ProductService {
             giaSanPham: product.giaSanPham,
             khuyenmai_gia: product.khuyenmai_gia,
             logo_product: product.logo_product,
+            mo_ta: product.mo_ta,
             theLoai: {
                 id_theLoai: product.theLoai_id_theLoai,
                 ten_the_loai: product.theLoai_ten_the_loai,
@@ -3973,7 +4005,7 @@ exports.DiaChiController = DiaChiController = __decorate([
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("1c9516fa819e7407ccb5")
+/******/ 		__webpack_require__.h = () => ("5f479ba7bc341c25f326")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
