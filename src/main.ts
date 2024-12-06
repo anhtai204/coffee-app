@@ -18,7 +18,7 @@ async function bootstrap() {
   }
 
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
-    prefix: '/uploads',  // Đường dẫn sẽ là http://localhost:3000/uploads/twitter.png
+    prefix: '/uploads',
   });
 
   // app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));

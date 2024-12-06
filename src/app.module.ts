@@ -31,12 +31,11 @@ import { DiaChiModule } from './diachi/diachi.module';
   imports: [
       TypeOrmModule.forRoot({
         type: 'mysql',
-        // host: 'localhost',
         host: '0.0.0.0',
         port: 3306,
         username: 'root',
         password: '22042004',
-        database: 'coffee_app',
+        database: 'coffee_app_test',
         entities: [UserEntity, TheLoaiEntity, ToppingEntity, KhuyenMaiEntity, ProductEntity, ProductToppingEntity, 
           RateEntity, PhuongThucThanhToanEntity, DonHangEntity, DiaChiEntity],
         synchronize: false,

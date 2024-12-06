@@ -275,7 +275,7 @@ exports.AppModule = AppModule = __decorate([
                 port: 3306,
                 username: 'root',
                 password: '22042004',
-                database: 'coffee_app',
+                database: 'coffee_app_test',
                 entities: [user_entity_1.UserEntity, theloai_entity_1.TheLoaiEntity, topping_entity_1.ToppingEntity, khuyenmai_entity_1.KhuyenMaiEntity, product_entity_1.ProductEntity, product_topping_entity_1.ProductToppingEntity,
                     rate_entity_1.RateEntity, phuongthucthanhtoan_entity_1.PhuongThucThanhToanEntity, donhang_entity_1.DonHangEntity, diachi_entity_1.DiaChiEntity],
                 synchronize: false,
@@ -4005,7 +4005,7 @@ exports.DiaChiController = DiaChiController = __decorate([
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("5f479ba7bc341c25f326")
+/******/ 		__webpack_require__.h = () => ("e41a78daac83caecb709")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
